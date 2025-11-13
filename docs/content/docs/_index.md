@@ -6,23 +6,22 @@ comments: true
 
 <!--more-->
 
-## **Что такое Архитектурный портал?**
-
-Портал `{{< tooltip "Архитектурный портал" >}}` предоставляет централизованное решение для
-- **Проектирования и управления архитектурными моделями** – визуальное и программное описание архитектуры с возможностью автоматической валидации.
-- **Интеграции с DevOps-процессами** – автоматическая генерация YAML-манифестов для развертывания.  
-- **Хранения и версионирования архитектурных артефактов** – использование Git-репозитория для контроля изменений.  
-- **Автоматизации преобразований между моделями** – механизм ETL для согласования архитектурных артефактов между различными системами.  
-- **Гибкой настройки маппинга методологий** – поддержка конфигурационных файлов для сопоставления сущностей и связей.
-
 ## **Ключевые технологии и стек**
 
-**`Архитектурные практики`** - микросервисы, event-driven архитектура, гексагональная архитектура, GitOps, Clean Architecture.<br>
-**`DevOps и инфраструктура`** - Kubernetes, Docker, Terraform, Ansible, Argo CD, Helm, CI/CD (GitLab, GitHub Actions).<br>
-**`Безопасность и IAM`** - Keycloak, Vault, OAuth2/OIDC, TLS/PKI, DevSecOps-инструменты (Trivy, Gitleaks, Semgrep).<br>
-**`Данные и интеграция`** - PostgreSQL, ClickHouse, Kafka, Spark, MinIO, SQLMesh, REST/gRPC.<br>
-**`Языки и фреймворки`** - Python (ML, Data Engineering, backend), .NET 8 (enterprise backend), React/Next.js (frontend).<br>
-**`Мониторинг и Observability`** - Prometheus, Grafana, Loki, ELK.
+**`Архитектурные практики`** - микросервисный подход, разделение frontend/backend, GitOps-модель доставки, декларативные окружения через Helm и Argo CD.
+
+**`DevOps и инфраструктура`** - Kubernetes (k8s) в Yandex Cloud, Docker, Terraform (создание сети и ВМ), Ansible (bootstrap кластера через kubeadm), Helm-чарты, GitLab CI/CD, Argo CD для GitOps-синхронизации.
+
+**`Безопасность и IAM`** - использование imagePullSecrets, TLS-сертификаты от cert-manager, безопасная публикация образов в GitLab Container Registry, SSH-доступ с ключами, защита CI-переменных.
+
+**`Данные и интеграция`** - backend взаимодействует с внутренними сервисами и внешними API, конфигурации управляются через ConfigMap/Secrets, коммуникация внутри кластера через Service DNS.
+
+**`Языки и фреймворки`**
+- **Backend:** `Go` (REST API, компактный бинарный файл в Docker-образе).
+- **Frontend:** `Vue.js` + Nginx (SPA).
+- **CI-инфраструктура:** Bash/YAML (GitLab pipelines).
+
+**`Мониторинг и Observability`** - `Prometheus` для метрик и состояния кластера, `Grafana` для визуализации; логирование через stdout Pod’ов с анализом в стандартных k8s-инструментах и `Grafana Loki`.
 
 ## Далее
 

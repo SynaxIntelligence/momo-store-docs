@@ -1,76 +1,244 @@
 ---
-title: Разработка
-weight: 19
+tags: [repo, cicd]
+title: Репозиторий и CI/CD
+weight: 2
 prev: /docs/getting-started
 sidebar:
-open: true
+  open: true
 ---
 
 ## Описание
 
-- **`Портал документации`**: Централизованная платформа на базе `{{< tooltip "SSG" >}}` `HUGO` [`v0.145.0`](https://github.com/gohugoio/hugo/releases/tag/v0.145.0), предоставляющая доступ к актуальной и подробной документации по всем аспектам наших проектов и технологий.
-  Здесь вы найдете руководства, инструкции и лучшие практики, которые помогут вам эффективно использовать портал.
+Этот раздел описывает структуру репозитория приложения и реализованный конвейер `CI/CD`, использующий `GitLab CI`.  
+Архитектура репозитория состоит из двух приложений — backend (`Go`) и frontend (`Vue`), а также набора общих CI-шаблонов, упрощающих сборку Docker-образов, версионирование и деплой через `Helm`.
 
-- **`Система 1`**: Платформа для архитектурного проектирования на основе методологий.
+# 2.1. Структура репозитория
 
-- **`Система 2`**: Инструмент для управления архитектурными артефактами, реализующий подход `Архитектура как код`.
+Ниже представлена структура проекта, включающая backend, frontend и библиотеку GitLab CI-шаблонов.
 
-- **`Репозиторий манифестов`**: Хранилище манифестов, используемое для управления архитектурными шаблонами, метамоделью, манифестами и развертыванием архитектуры.
-  Репозиторий обеспечивает централизованное и согласованное хранение и контроль версий манифестов.
+## 2.1.1. Дерево файлов репозитория
 
-## Базовые группы доступа
+{{< filetree/container >}}
+{{< filetree/folder name="momo-store" state="open" >}}
 
-| **Наименование** | **Функциональные права**       | **Доступ к БД**                |
-|------------------|--------------------------------|--------------------------------|
-| `admins`         | _* (все)_                      | _* (все)_                      |
-| `users`          | _в соответствие с назначением_ | _в соответствие с назначением_ |
+    {{< filetree/folder name=".idea" state="closed" >}}{{< /filetree/folder >}}
+    {{< filetree/folder name=".lib" state="open" >}}
+      {{< filetree/file name="docker-build.gitlab-ci.yml" >}}
+      {{< filetree/file name="helm-deploy.gitlab-ci.yml" >}}
+      {{< filetree/file name="version.gitlab-ci.yml" >}}
+    {{< /filetree/folder >}}
 
-## Предварительная оценка ресурсов
+    {{< filetree/folder name="backend" state="open" >}}
+      {{< filetree/folder name="cmd" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="internal" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/file name=".gitlab-ci.yml" >}}
+      {{< filetree/file name="Dockerfile" >}}
+      {{< filetree/file name="go.mod" >}}
+      {{< filetree/file name="main.go" >}}
+      {{< filetree/file name="README.md" >}}
+      {{< filetree/file name="router.go" >}}
+    {{< /filetree/folder >}}
 
-> [!NOTE]
-> Рекомендуемые требования к серверу при развертывании более чем 100 пользователей онлайн
+    {{< filetree/folder name="frontend" state="open" >}}
+      {{< filetree/folder name="nginx" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="public" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="src" state="closed" >}}{{< /filetree/folder >}}
 
-{{< tabs items="Система 2,Система 2,ETL,HUGO" >}}
+      {{< filetree/file name=".browserslistrc" >}}
+      {{< filetree/file name=".gitlab-ci.yml" >}}
+      {{< filetree/file name="babel.config.js" >}}
+      {{< filetree/file name="Dockerfile" >}}
+      {{< filetree/file name="entrypoint.sh" >}}
+      {{< filetree/file name="package.json" >}}
+      {{< filetree/file name="package-lock.json" >}}
+      {{< filetree/file name="README.md" >}}
+      {{< filetree/file name="tsconfig.json" >}}
+      {{< filetree/file name="vue.config.js" >}}
+    {{< /filetree/folder >}}
 
-{{< tab >}}
+    {{< filetree/file name=".gitignore" >}}
+    {{< filetree/file name=".gitlab-ci.yml" >}}
+    {{< filetree/file name="compose.yml" >}}
 
-| Ресурс  | SERVER              |
-|---------|---------------------|
-| **CPU** | `16 vCPUs @ 2.7GHz` |
-| **RAM** | `32 GB`             |
-| **HDD** | `1 TB`              |
-| **SSD** | `500 GB`            |
-| **Net** | `1 Gbps`            |
+{{< /filetree/folder >}}
+{{< /filetree/container >}}
 
-{{< /tab >}}
+# Общая концепция CI/CD
 
-{{< tab >}}
-- **CPU** > 8+ vCPUs
-- **RAM** > 32 GB
-- **HDD** > 100+ GB
-- **Net** > 1 Gbps
-  {{< /tab >}}
+CI/CD построен вокруг следующих принципов:
 
-{{< tab >}}
-- **CPU** > 8+ vCPUs
-- **RAM** > 32 GB
-- **HDD** > 100 GB
-- **Net** > 1 Gbps
-  {{< /tab >}}
+### **1. Единый конвейер на уровне корня репозитория**
+Файл `.gitlab-ci.yml` в корне агрегирует пайплайны backend и frontend и подключает общие CI-шаблоны:
 
-{{< tab >}}
+- автоматическое версионирование (`version.gitlab-ci.yml`)
+- сборка Docker-образов (`docker-build.gitlab-ci.yml`)
+- Helm-деплой (`helm-deploy.gitlab-ci.yml`)
 
-| Ресурс  | minimum   | optimal    |
-|---------|-----------|------------|
-| **CPU** | `1 vCPU`  | `2 vCPUs`  |
-| **RAM** | `512 MB`  | `1-2 GB`   |
-| **HDD** | `1 GB`    | `5-10 GB`  |
-| **Net** | `10 Mbps` | `100 Mbps` |
-{{< /tab >}}
+### **2. Микросервисность внутри одного монорепозитория**
 
-{{< /tabs >}}
+Backend и frontend имеют собственные `.gitlab-ci.yml`, что позволяет:
 
-> [!NOTE]
-> Суммарные значения ресурсов для развертывания на `~100 +/- 10%` пользователей
-> `32 vCPU` - `96 GB RAM` -  `1250 GB HDD` - `500 GB SSD`
+- запускать отдельные сборки при изменениях только в нужной части,
+- разделять настройки Docker-образов,
+- иметь отдельные Helm-чарты при необходимости.
 
+### **3. Абстракция повторяемых шагов через `.lib`**
+
+Фолдер `.lib` содержит три ключевых CI-шаблона:
+
+| Шаблон                       | Назначение                                   |
+|------------------------------|----------------------------------------------|
+| `version.gitlab-ci.yml`      | Автоматическое семантическое версионирование |
+| `docker-build.gitlab-ci.yml` | Сборка и публикация Docker образов           |
+| `helm-deploy.gitlab-ci.yml`  | Деплой приложения в Kubernetes через Helm    |
+
+Это позволяет сокращать дублирование и обеспечивать единообразие пайплайнов.
+
+---
+
+# 2.3. Основной CI/CD конвейер
+
+## 2.3.1. Общий `.gitlab-ci.yml`
+
+Главный GitLab CI-файл:
+
+- объявляет global variables,
+- подключает библиотечные шаблоны из `.lib`,
+- включает пайплайны backend и frontend,
+- описывает stages.
+
+**Типичные стадии:**
+
+* version
+* build
+* test
+* release
+* deploy
+
+## 2.3.2. Версионирование
+
+Подключается:
+
+```yaml
+include:
+  - local: ".lib/version.gitlab-ci.yml"
+```
+
+**Функциональность:**
+
+* вычисление SemVer версии (например, `0.1.5-17`)
+* публикация версии в job artifacts
+* использование версии в образах и Helm-чартах
+
+## CI/CD для backend
+
+#### Файл `backend/.gitlab-ci.yml`:
+
+* триггеры по изменениям: `only: [backend/*]`
+* сборка Go-приложения
+* unit-тесты (если есть)
+* сборка Docker-образа через `.lib/docker-build.gitlab-ci.yml`
+
+Параметры:
+
+* путь к Dockerfile: `backend/Dockerfile`
+* Docker context: `/backend`
+* имя образа: `backend`
+
+## CI/CD для frontend
+
+#### Файл `frontend/.gitlab-ci.yml`:
+
+* зависимости Node.js (npm or yarn)
+* сборка SPA проекта
+* подготовка сборки Nginx
+* сборка Docker-образа через `.lib/docker-build.gitlab-ci.yml`
+
+Параметры:
+
+* путь к Dockerfile: `frontend/Dockerfile`
+* context: `frontend`
+* имя образа: `frontend`
+
+## Docker-build template (.lib/docker-build.gitlab-ci.yml)
+
+#### Возможности:
+
+* автоматическая сборка Docker-образа
+* тегирование в формате
+  `registry/app:${CI_COMMIT_SHA}`
+  `registry/app:${VERSION}`
+* push в GitLab Container Registry
+* кэширование слоёв
+
+Использование:
+
+```yaml
+include:
+  - local: ".lib/docker-build.gitlab-ci.yml"
+
+docker-build:
+  variables:
+    DOCKER_CONTEXT: "./backend"
+    DOCKERFILE_PATH: "./backend/Dockerfile"
+```
+
+## Helm-deploy template (.lib/helm-deploy.gitlab-ci.yml)
+
+- реализация GitOps-подхода: пайплайн **не выполняет `helm upgrade` сам**, а правит конфигурационный репозиторий с Helm-чартами;
+- копирование базового `values.yaml` в файл окружения `values-${CI_ENVIRONMENT_NAME}.yaml`;
+- обновление тега Docker-образа:
+  - поле `.${DEPENDENCY_CHART_NAME}.image.tag` в `values-${CI_ENVIRONMENT_NAME}.yaml` получает значение `${VERSION}`;
+- обновление `appVersion` в `Chart.yaml` до `${VERSION}`;
+- коммит и push изменений в отдельный конфигурационный репозиторий (`CONFIG_REPO`), откуда уже внешний CD-инструмент (например, Argo CD) применяет изменения в кластере.
+
+Пример использования (шаблон из `.lib`):
+
+```yaml
+include:
+  - local: ".lib/helm-deploy.gitlab-ci.yml"
+
+deploy:
+  extends: .deploy_template
+```
+
+**Окружение определяется автоматически в самом шаблоне через `rules`**
+
+* для ветки develop — `CI_ENVIRONMENT_NAME=dev`;
+* для ветки main — `CI_ENVIRONMENT_NAME=prod`, деплой в prod `when: manual`.
+
+## Полный CI/CD процесс
+
+```mermaid
+flowchart TD
+A[Изменения в репозитории] --> B[Определение изменений: backend/frontend]
+B --> C[Генерация версии]
+C --> D[Сборка Docker образов]
+D --> E[Публикация образов в GitLab Registry]
+E --> F[Обновление Helm-чартов в config-repo]
+F --> G[Argo CD развёртывает в Kubernetes]
+```
+
+{{< plantuml id="pipeline_diag" file="docs/architecture/products/etl/assets/pipeline.puml" >}}
+
+
+
+## Итог
+
+CI/CD конвейер обеспечивает:
+
+* автоматическое версионирование,
+* сборку Docker-образов backend и frontend,
+* публикацию артефактов в GitLab Registry,
+* деплой в Kubernetes через Helm,
+* разделение и независимость пайплайнов,
+* переиспользуемые шаблоны в `.lib`.
+
+## Далее
+
+Перейти в раздел
+
+{{< cards >}}
+{{< card link="../infrastructure" title="Инфраструктура" icon="document-duplicate" >}}  
+{{< card link="../architecture" title="Архитектура" icon="desktop-computer" >}}
+{{< /cards >}}

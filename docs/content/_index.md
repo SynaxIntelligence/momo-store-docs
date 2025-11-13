@@ -11,16 +11,17 @@ layout: hextra-home
 
 <div class="hx-mt-6 hx-mb-6">
 {{< hextra/hero-headline >}}
-  Архитектурный портал <br class="sm:hx-block hx-hidden" />
+  Портал документации <br class="sm:hx-block hx-hidden" />
 {{< /hextra/hero-headline >}}
 </div>
 
 <div class="hx-mb-12">
 {{< hextra/hero-subtitle >}}
-  Данный портал представляет профессиональное портфолио функционального архитектора. <br class="sm:hx-block hx-hidden" />
-  Здесь собраны примеры архитектурных схем, проектных решений и практических кейсов, которые иллюстрируют мой опыт в построении комплексных систем: <br class="sm:hx-block hx-hidden" />
-  от проектирования инфраструктуры и интеграции сервисов до обеспечения безопасности и масштабируемости решений. <br class="sm:hx-block hx-hidden" />
-  Портал объединяет такие артефакты, как `Спецификация на разработку` и `Архитектурное решение`. <br class="sm:hx-block hx-hidden" />  
+  Данный портал представляет собой централизованный источник технической документации по `momo-store` и всей его инфраструктуре. <br class="sm:hx-block hx-hidden" />
+  Он создан для того, чтобы участники команды: разработчики, DevOps-инженеры и сопровождающие: <br class="sm:hx-block hx-hidden" />
+  могли быстро получить полное понимание архитектуры решения, процессов сборки и доставки, устройства инфраструктуры и принципов эксплуатации. <br class="sm:hx-block hx-hidden" />
+  Портал объединяет такие артефакты, как `Спецификация на разработку`, `Описание инфраструктуры k8s-кластера`, <br class="sm:hx-block hx-hidden" />
+  `Описание практик релизного цикла, версионирования и правил внесения изменений`. <br class="sm:hx-block hx-hidden" />
 {{< /hextra/hero-subtitle >}}
 </div>
 
@@ -41,7 +42,7 @@ layout: hextra-home
   >}}
   {{< hextra/feature-card
     title="Solution архитектура"
-    subtitle="Информация по архитектурным решениям портала"
+    subtitle="Информация по архитектурным решениям"
     class="hx-aspect-auto md:hx-aspect-[1.1/1] max-lg:hx-min-h-[340px]"
     image="images/landscape.png"
     imageClass="hx-top-[10%] hx-left-[36px] hx-w-[110%] sm:hx-w-[110%] dark:hx-opacity-80"

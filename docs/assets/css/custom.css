@@ -12,6 +12,10 @@
 /*    background-color: #f0f0f0;*/
 /*}*/
 
+.small-table table {
+    font-size: 12px;
+}
+
 .glossary {
     font-family: Arial, sans-serif;
     margin: 20px 0;
