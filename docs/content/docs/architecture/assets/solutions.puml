@@ -1,0 +1,65 @@
+@startmindmap
+* Архитектурные решения
+
+** Медицина
+*** Специфика
+**** Защита ПДн (GDPR, HIPAA)
+**** Интеграция HL7/FHIR
+**** Масштаб для пациентов и устройств
+*** Стек
+**** Kubernetes, Argo CD, Helm
+**** Keycloak, Vault, TLS/PKI
+**** PostgreSQL, Kafka, MinIO
+**** .NET 8 (backend), React (frontend)
+**** Spark, Python (ML/ETL)
+
+** АБС (Автоматизированные банковские системы)
+*** Специфика
+**** Требования регулятора (ЦБ, Basel III)
+**** Критичность транзакций, аудит, трассировка
+**** HA/DR, RTO/RPO, комплаенс и безопасность
+*** Стек
+**** Java / .NET
+**** PostgreSQL / Oracle
+**** Kafka (события, интеграции)
+**** Kubernetes / OpenShift, GitLab CI/CD
+**** DevSecOps (Trivy, Gitleaks, Semgrep)
+
+** DLH (Data Lakehouse)
+*** Специфика
+**** Объёмы Tb–Pb, Data Lake + DWH
+**** Batch + Real-time обработка
+**** Интеграция с ML/AI и BI
+*** Стек
+**** Spark, Airflow
+**** Delta Lake / Apache Iceberg
+**** ClickHouse, MinIO/S3
+**** Kafka, SQLMesh, Python
+**** Superset, Grafana
+
+** Страхование
+*** Специфика
+**** Гибкие продуктовые модели, тарифы
+**** Партнёрские API и внешние провайдеры
+**** Аналитика рисков и фрод-мониторинг
+*** Стек
+**** .NET 8, Python (сервисы/ML)
+**** PostgreSQL, ClickHouse
+**** Kafka (шина событий)
+**** Keycloak (IAM)
+**** Kubernetes, Argo CD
+
+** Недвижимость
+*** Специфика
+**** Каталоги объектов и сделки
+**** Интеграция с гос. системами (ЕГРН/кадастр)
+**** Геоданные и массовые поисковые запросы
+*** Стек
+**** .NET 8 / Python (backend), React (frontend)
+**** PostgreSQL + PostGIS
+**** Elasticsearch (поиск)
+**** Kafka (интеграции)
+**** Kubernetes + Argo CD
+**** BI: Superset, Grafana
+
+@endmindmap

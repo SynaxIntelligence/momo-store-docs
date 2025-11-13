@@ -1,0 +1,27 @@
+{{- $lastUpdated := (T "lastUpdated") | default "Last updated on" -}}
+{{- $gitlab := .Site.Params.GitlabRepoBase | default "https://gitlab.com" -}}
+
+{{- if site.Params.displayUpdatedDate -}}
+  {{- with .Lastmod -}}
+    {{ $datetime := (time.Format "2006-01-02T15:04:05.000Z" .) }}
+    <div class="hx-mt-12 hx-block hx-text-xs hx-text-gray-500 ltr:hx-text-right rtl:hx-text-left dark:hx-text-gray-400">{{ $lastUpdated }} <time datetime="{{ $datetime }}">{{ partial "utils/format-date" . }}</time></div>
+  {{- else -}}
+    <div class="hx-mt-16"></div>
+  {{- end -}}
+{{- else -}}
+  <div class="hx-mt-16"></div>
+{{- end -}}
+
+{{- with .GitInfo -}}
+<div class="hx-mb-6 hx-block hx-text-xs hx-text-gray-500 ltr:hx-text-right rtl:hx-text-left dark:hx-text-gray-400" style="display: flex; justify-content: right;">
+  <div style="height: 24px; width: 24px; margin: 0 5px 0 0;">
+    {{ partial "utils/icon.html" (dict "name" "git") (dict "attributes" "height=24") -}}
+  </div>
+  <p>
+    <a href="{{ $gitlab }}/commit/{{ .Hash }}" target="_blank" rel="noopener noreferrer">{{ .AbbreviatedHash }}</a>:
+    {{ .AuthorName }}:
+    {{ .Subject }}:
+    {{ .CommitDate.Format "2006-01-02" }}
+  </p>
+</div>
+{{- end -}}

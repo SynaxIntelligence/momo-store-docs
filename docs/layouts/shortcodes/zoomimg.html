@@ -1,0 +1,12 @@
+
+<div class="zoom-img-container">
+    <img src="{{ .Get `src` | relURL }}" alt="{{ .Get `alt` }}" class="zoom-img" />
+    <a href="{{ .Get `src` | relURL }}" download class="download-button">
+        ⬇ Download
+    </a>
+</div>
+
+<div id="zoom-overlay" class="zoom-overlay hidden">
+    <span class="close-btn">&times;</span>
+    <img id="zoomed-image" src="" alt="Zoomed Image" />
+</div>

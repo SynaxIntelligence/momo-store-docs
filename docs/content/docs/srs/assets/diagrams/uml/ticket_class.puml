@@ -1,0 +1,19 @@
+
+@startuml
+class Ticket {
+  - id: int
+  --
+  + visitId: int
+  + data: byte[]
+  + timestamp: Timestamp
+}
+
+class TicketService {
+  + getTicket (id: int): <Ticket>
+  + addTicket (ticket: <Ticket>): void
+  + updateTicket (id: int, newTicket: <Ticket>): <Ticket>
+  + removeTicket (id: int): void
+  --
+  + getTicketList (visitId: int): List<Ticket>
+}
+@enduml

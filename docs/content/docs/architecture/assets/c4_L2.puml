@@ -1,0 +1,122 @@
+
+@startuml C4_Elements
+
+'!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <c4/C4_Container.puml>
+!include <tupadr3/devicons/react>
+!include <tupadr3/devicons/java>
+!include <tupadr3/devicons/postgresql.puml>
+!include <tupadr3/devicons/python.puml>
+!include <tupadr3/devicons/dotnet.puml>
+!include <tupadr3/devicons/docker.puml>
+!include <tupadr3/devicons/msql_server.puml>
+!include <tupadr3/devicons2/vuejs>
+!include <tupadr3/devicons2/dotnetcore>
+!include <tupadr3/devicons2/gitlab>
+!include <tupadr3/devicons2/hugo>
+!include <tupadr3/devicons2/kubernetes>
+!include <tupadr3/devicons2/oauth>
+!include <tupadr3/font-awesome/users>
+!include <tupadr3/font-awesome/server>
+!include <tupadr3/font-awesome/envelope>
+!include <tupadr3/font-awesome/server>
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+scale 0.7
+
+'skinparam linetype ortho
+'skinparam linetype polyline
+skinparam wrapWidth 200
+skinparam titleFontSize 20
+skinparam HyperlinkUnderline false
+skinparam backgroundColor WhiteSmoke
+
+title Диаграмма решения\n Архитектурная платформа \n\n\n
+
+'SET_SKETCH_STYLE($bgColor="lightblue", $fontColor="darkblue", $warningColor="darkred", $footerWarning="Sketch", $footerText="Created for discussion")
+
+' PNG with font jlm_cmmi10 (typically another font is used)
+'SET_SKETCH_STYLE($fontName="jlm_cmmi10")
+
+' SVG with fallback fonts MS Gothic,Comic Sans MS, Comic Sans, Chalkboard SE, Comic Neue, cursive, sans-serif (typically without "MS Gothic")
+'SET_SKETCH_STYLE($fontName="MS Gothic,Comic Sans MS,Comic Sans,Chalkboard SE,Comic Neue,cursive,sans-serif")
+
+'LAYOUT_WITH_LEGEND()
+'LAYOUT_LANDSCAPE()
+'LAYOUT_AS_SKETCH()
+HIDE_STEREOTYPE()
+SHOW_PERSON_PORTRAIT()
+
+AddElementTag("microService", $sprite="java,scale=1", $shadowing="true", $legendText="microservice")
+AddElementTag("backendContainer", $fontColor=$ELEMENT_FONT_COLOR, $shadowing="true", $bgColor="#335DA5", $shape=, $legendText="backend container (eight sided)")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="black")
+AddElementTag("queue", $bgColor="aliceblue", $fontColor="black", $borderColor="darkgrey", $borderThickness="2")
+AddElementTag("extSaas", $bgColor="MediumSeaGreen", $shadowing="true", $fontColor="white", $borderColor="darkgrey", $borderThickness="2", $legendText="SaaS сервисы")
+AddElementTag("cluster", $bgColor="transparent", $fontColor="blue", $borderThickness=0, $sprite="kubernetes,scale=.75")
+AddElementTag("users", $bgColor="transparent", $fontColor="teal", $borderThickness=0, $sprite="users,scale=.75")
+
+AddRelTag("main", $sprite="", $lineThickness="2.1", $techn="", $textColor=$ARROW_FONT_COLOR, $lineColor=olive, $lineStyle=SolidLine())
+AddRelTag("async", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DashedLine())
+AddRelTag("sync/async", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DottedLine())
+
+AddBoundaryTag("datahall", $sprite="server", $bgColor="", $fontColor="", $borderColor="", $shadowing="true", $shape="", $type="datahall", $legendText="", $borderStyle="", $borderThickness="", $legendSprite="")
+AddBoundaryTag("cluster", $sprite="kubernetes,scale=.75", $bgColor="", $fontColor="", $borderColor="", $shadowing="true", $shape="", $type="cluster", $legendText="", $borderStyle="", $borderThickness="", $legendSprite="")
+
+Person(user, "Пользователь", "Архитектор\n решений", $sprite="users", $tags="users")
+Person(user_meth, "Пользователь", "Методолог", $sprite="users", $tags="users")
+
+System_Boundary(dh, "ЦОД", $tags=datahall) {
+    System_Boundary(c, "cluster-main", $tags=cluster) {
+        System_Boundary(common, "cluster-1", $tags=cluster) {
+
+            System_Boundary(ap, "Архитектурная платформа\nproject:ap\nns: ap") {
+
+                Container_Boundary(system_1_ms, "Система 1") {
+                    Container(bpm_script_engine, "BPM Script Engine", "java", "Сервис скриптов", $tags="microService")
+                    Container(bpm_srv, "BPM Server", "java", "Сервис BPM", $tags="microService")
+                    Container(bpm_image, "BPM Image", "java", "Сервис изображений", $tags="microService")
+                    ContainerDb(bpm_server_db, "Database", "Postgre SQL", "БД Система 1", $sprite="postgresql", $tags="storage")
+                }
+
+                Container_Boundary(etl_ms, "ETL Service") {
+                    Container(etl_srv, "ETL Server", "dotnetcore", "Сервис ETL", $sprite="dotnetcore", $tags="microService")
+                    ContainerDb(etl_server_db, "Database", "Postgre SQL", "БД ETL", $sprite="postgresql", $tags="storage")
+                }
+            }
+        }
+
+        System_Boundary(cluster-2, "cluster-2", $tags=cluster) {
+
+            System_Boundary(ext_services, "Сервисы SaaS") {
+                Container_Ext(gitlab, "Gitlab", "ap repos", "Репозитории проекта" , $sprite=gitlab, $tags="extSaas")
+            }
+        }
+    }
+    System_Boundary(s3_b, "S3 Minio") {
+        Container_Ext(s3, "S3 Minio", "ap bucket", "Бакет проекта", $tags="extSaas")
+    }
+}
+
+Lay_D(user, bpm_srv)
+Lay_D(user_meth, bpm_srv)
+
+Rel(user, bpm_srv, "Проектирует архитектуру", "HTTPS:443", $link="https://google.com")
+Rel(user_meth, bpm_srv, "Ведет методологию", "HTTPS:443", $link="https://google.com")
+
+Rel_U(etl_srv, gitlab, "(3) Загружает YAML манифесты", "HTTPS:443", $tags=main)
+Rel_U(etl_srv, s3, "Запрашивает файлы конфигурации методологии", "HTTP:9000 / HTTPS:443")
+
+Rel(etl_srv, bpm_srv, "(1) Запрашивает архитектуру", "TCP:8080:REST", $tags=main)
+Rel(bpm_srv, etl_srv, "(2) Возвращает архитектуру", "TCP:8080:REST", $tags=main)
+
+Rel_D(etl_srv, etl_server_db, "Хранит метаданные преобразования моделей", "TCP:5432:ODBC")
+
+Rel(bpm_srv, bpm_server_db, "Хранение объектов / журналы аудита", "TCP:5432:JDBC")
+Rel_Neighbor(bpm_srv, bpm_script_engine, "Запрашивает исполнение скриптов", "TCP:8082")
+Rel(bpm_srv, bpm_image, "Запрашивает обработку изображений", "TCP:8084")
+
+center footer v1.250823-ap
+
+@enduml

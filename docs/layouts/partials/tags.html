@@ -1,0 +1,7 @@
+{{ with .tags }}
+<ul class="tag-list">
+    {{ range . }}
+    <li><a href="{{ .RelPermalink }}" target="_blank"><i class="fas fa-tag"></i> {{ .LinkTitle }}</a></li>
+    {{ end }}
+</ul>
+{{ end }}

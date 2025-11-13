@@ -1,0 +1,1088 @@
+openapi: 3.0.0
+info:
+  title: API для планирования посещения музея
+  version: 1.0.0
+  description: API для планирования посещения музеев
+
+servers:
+  - description: Основной сервер
+    url: '{protocol}://virtserver.swaggerhub.com/musemium/{basePath}/{version}'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: https
+      basePath:
+        default: api
+      version:
+        default: v1
+
+security:
+  - bearerAuth: []
+  - password:
+      - read
+      - write
+
+paths:
+  /users:
+    get:
+      summary: Получить список пользователей
+      description: Возвращает список всех пользователей в системе.
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Создать пользователя
+      description: Создает нового пользователя в системе.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Пользователь успешно создан
+        '404':
+          description: Ресурс не найден
+
+  /users/{userId}:
+    get:
+      summary: Получить информацию о пользователе
+      description: Возвращает информацию о пользователе по его идентификатору.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Пользователь не найден
+    put:
+      summary: Обновить информацию о пользователе
+      description: Обновляет информацию о пользователе по его идентификатору.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Информация о пользователе успешно обновлена
+        '404':
+          description: Пользователь не найден
+
+  /auth/social:
+    post:
+      summary: Аутентификация по токену социальной сети
+      description: Позволяет пользователям аутентифицироваться в системе, используя токен социальной сети.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                socialToken:
+                  type: string
+                  description: Токен социальной сети (например, Facebook, Google)
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT токен для аутентификации пользователя
+  /user-photos:
+    get:
+      summary: Получить список фотографий пользователей
+      description: Возвращает список всех фотографий пользователей в системе.
+      tags:
+        - UserPhotos
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPhoto'
+    post:
+      summary: Создать фотографию пользователя
+      description: Создает новую фотографию пользователя в системе.
+      tags:
+        - UserPhotos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPhoto'
+      responses:
+        '201':
+          description: Фотография пользователя успешно создана
+        '400':
+          description: Некорректный запрос
+
+  /user-photos/{photoId}:
+    get:
+      summary: Получить информацию о фотографии пользователя
+      description: Возвращает информацию о фотографии пользователя по её идентификатору.
+      tags:
+        - UserPhotos
+      parameters:
+        - in: path
+          name: photoId
+          required: true
+          description: Идентификатор фотографии пользователя
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPhoto'
+        '404':
+          description: Фотография пользователя не найдена
+
+    put:
+      summary: Обновить информацию о фотографии пользователя
+      description: Обновляет информацию о фотографии пользователя по её идентификатору.
+      tags:
+        - UserPhotos
+      parameters:
+        - in: path
+          name: photoId
+          required: true
+          description: Идентификатор фотографии пользователя
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPhoto'
+      responses:
+        '200':
+          description: Информация о фотографии пользователя успешно обновлена
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Фотография пользователя не найдена
+
+    delete:
+      summary: Удалить фотографию пользователя
+      description: Удаляет фотографию пользователя по её идентификатору.
+      tags:
+        - UserPhotos
+      parameters:
+        - in: path
+          name: photoId
+          required: true
+          description: Идентификатор фотографии пользователя
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Фотография пользователя успешно удалена
+        '404':
+          description: Фотография пользователя не найдена
+
+  /accounts:
+    get:
+      summary: Получить список учетных записей
+      description: Возвращает список всех учетных записей в системе.
+      tags:
+        - Accounts
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      summary: Создать учетную запись
+      description: Создает новую учетную запись в системе.
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '201':
+          description: Учетная запись успешно создана
+        '400':
+          description: Некорректный запрос
+
+  /accounts/{accountId}:
+    get:
+      summary: Получить информацию об учетной записи
+      description: Возвращает информацию об учетной записи по её идентификатору.
+      tags:
+        - Accounts
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          description: Идентификатор учетной записи
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: Учетная запись не найдена
+
+    put:
+      summary: Обновить информацию об учетной записи
+      description: Обновляет информацию об учетной записи по её идентификатору.
+      tags:
+        - Accounts
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          description: Идентификатор учетной записи
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Информация об учетной записи успешно обновлена
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Учетная запись не найдена
+
+    delete:
+      summary: Удалить учетную запись
+      description: Удаляет учетную запись по её идентификатору.
+      tags:
+        - Accounts
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          description: Идентификатор учетной записи
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Учетная запись успешно удалена
+        '404':
+          description: Учетная запись не найдена
+
+  /visits:
+    get:
+      summary: Получить список посещений
+      description: Возвращает список всех посещений в системе.
+      tags:
+        - Visits
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Visit'
+    post:
+      summary: Создать посещение
+      description: Создает новое посещение в системе.
+      tags:
+        - Visits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '201':
+          description: Посещение успешно создано
+        '400':
+          description: Некорректный запрос
+
+  /visits/{visitId}:
+    get:
+      summary: Получить информацию о посещении
+      description: Возвращает информацию о посещении по его идентификатору.
+      tags:
+        - Visits
+      parameters:
+        - in: path
+          name: visitId
+          required: true
+          description: Идентификатор посещения
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        '404':
+          description: Посещение не найдено
+
+    put:
+      summary: Обновить информацию о посещении
+      description: Обновляет информацию о посещении по его идентификатору.
+      tags:
+        - Visits
+      parameters:
+        - in: path
+          name: visitId
+          required: true
+          description: Идентификатор посещения
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+      responses:
+        '200':
+          description: Информация о посещении успешно обновлена
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Посещение не найдено
+
+    delete:
+      summary: Удалить посещение
+      description: Удаляет посещение по его идентификатору.
+      tags:
+        - Visits
+      parameters:
+        - in: path
+          name: visitId
+          required: true
+          description: Идентификатор посещения
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Посещение успешно удалено
+        '404':
+          description: Посещение не найдено
+
+  /museums:
+    get:
+      summary: Получить список музеев
+      tags:
+        - Museums
+      responses:
+        '200':
+          description: Список музеев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Museum'
+    post:
+      summary: Создать новый музей
+      tags:
+        - Museums
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Museum'
+      responses:
+        '200':
+          description: Музей успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Museum'
+
+  /museums/{museumId}:
+    get:
+      summary: Получить информацию о музее
+      tags:
+        - Museums
+      parameters:
+        - name: museumId
+          in: path
+          required: true
+          description: Идентификатор музея для получения информации
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Информация о музее
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Museum'
+
+  /exhibitions:
+    get:
+      summary: Получить список выставок
+      tags:
+        - Exhibitions
+      responses:
+        '200':
+          description: Список выставок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exhibition'
+    post:
+      summary: Создать новую выставку
+      tags:
+        - Exhibitions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exhibition'
+      responses:
+        '200':
+          description: Выставка успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exhibition'
+  /exhibitions/{exhibitionId}:
+    get:
+      summary: Получить подробную информацию о выставке
+      tags:
+        - Exhibitions
+      description: Возвращает подробную информацию о выставке по ее идентификатору.
+      parameters:
+        - name: exhibitionId
+          in: path
+          description: Идентификатор выставки
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Подробная информация о выставке успешно получена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exhibition'
+        '404':
+          description: Выставка с указанным идентификатором не найдена
+        '500':
+          description: Ошибка сервера при получении подробной информации о выставке
+
+  /exhibits:
+    get:
+      summary: Получить список произведений искусства
+      tags:
+        - Exhibits
+      responses:
+        '200':
+          description: Список произведений искусства
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exhibit'
+    post:
+      summary: Создать новое произведение искусства
+      tags:
+        - Exhibits
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exhibit'
+      responses:
+        '200':
+          description: Произведение искусства успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exhibit'
+
+  /exhibits/{exhibitId}:
+    get:
+      summary: Получить подробную информацию о экспонате
+      tags:
+        - Exhibits
+      description: Возвращает подробную информацию об экспонате по его идентификатору.
+      parameters:
+        - name: exhibitId
+          in: path
+          description: Идентификатор экспоната
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Подробная информация об экспонате успешно получена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exhibit'
+        '404':
+          description: Экспонат с указанным идентификатором не найден
+        '500':
+          description: Ошибка сервера при получении подробной информации об экспонате
+
+
+  /tickets:
+    get:
+      summary: Получить список билетов
+      tags:
+        - Tickets
+      responses:
+        '200':
+          description: Список билетов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+    post:
+      summary: Создать новый билет
+      tags:
+        - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+      responses:
+        '200':
+          description: Билет успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+
+  /tickets/{ticketId}:
+    get:
+      summary: Получение информации о билете к посещению музея
+      tags:
+        - Tickets
+      description: Возвращает информацию о билете к посещению музея по его идентификатору.
+      parameters:
+        - name: ticketId
+          in: path
+          description: Идентификатор билета к посещению музея
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Информация о билете к посещению музея
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '404':
+          description: Билет с указанным идентификатором не найден
+        '500':
+          description: Ошибка сервера при получении информации о билете
+    delete:
+      summary: Удаление билета к посещению музея
+      tags:
+        - Tickets
+      description: Удаляет информацию о билете к посещению музея по его идентификатору.
+      parameters:
+        - name: ticketId
+          in: path
+          description: Идентификатор билета к посещению музея
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Билет успешно удален
+        '404':
+          description: Билет с указанным идентификатором не найден
+        '500':
+          description: Ошибка сервера при удалении билета
+
+  /checklists:
+    get:
+      summary: Получить список чеклистов
+      tags:
+        - Checklist
+      responses:
+        '200':
+          description: Список чеклистов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Checklist'
+    post:
+      summary: Создать новый чеклист
+      tags:
+        - Checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Checklist'
+      responses:
+        '200':
+          description: Чеклист успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checklist'
+
+  /news:
+    get:
+      summary: Получить список новостей
+      tags:
+        - News
+      responses:
+        '200':
+          description: Список новостей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+    post:
+      summary: Создать новую новость
+      tags:
+        - News
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/News'
+      responses:
+        '200':
+          description: Новость успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/News'
+
+  /news/{newsId}:
+    put:
+      summary: Отметить новость прочитанной
+      tags:
+        - News
+      description: Помечает новость прочитанной по её идентификатору.
+      parameters:
+        - name: newsId
+          in: path
+          description: Идентификатор новости
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Новость успешно помечена как прочитанная
+        '404':
+          description: Новость с указанным идентификатором не найдена
+        '500':
+          description: Ошибка сервера при отметке новости как прочитанной
+
+  /checklists/{checklistId}:
+    patch:
+      summary: Изменение чеклиста
+      tags:
+        - Checklist
+      parameters:
+        - name: checklistId
+          in: path
+          required: true
+          description: Идентификатор чеклиста
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Checklist'
+      responses:
+        '200':
+          description: Чеклист успешно изменен
+
+    delete:
+      summary: Удаление чеклиста о посещении музея
+      tags:
+        - Checklist
+      description: Удаляет чеклист о посещении музея по его идентификатору.
+      parameters:
+        - name: checklistId
+          in: path
+          description: Идентификатор чеклиста о посещении музея
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Чеклист успешно удален
+        '404':
+          description: Чеклист с указанным идентификатором не найден
+        '500':
+          description: Ошибка сервера при удалении чеклиста
+
+  /routes/optimal:
+    post:
+      summary: Построение оптимального маршрута
+      tags:
+        - Route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                museum_id:
+                  type: integer
+                artworks:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Оптимальный маршрут успешно построен
+
+  /routes/{routeId}:
+    get:
+      summary: Получить маршрут по идентификатору
+      description: Возвращает информацию о маршруте по идентификатору.
+      tags:
+        - Route
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Маршрут найден
+        '404':
+          description: Маршрут не найден
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    patch:
+      summary: Корректировка маршрута
+      tags:
+        - Route
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Route'
+      responses:
+        '200':
+          description: Маршрут успешно скорректирован
+
+    delete:
+      summary: Удаление маршрута
+      tags:
+        - Route
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Маршрут успешно удален
+        '404':
+          description: Маршрут не найден
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+components:
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор пользователя
+        name:
+          type: string
+          description: Имя пользователя
+        email:
+          type: string
+          format: email
+          description: Электронная почта пользователя
+        phone:
+          type: string
+          description: Номер телефона пользователя
+        location:
+          type: string
+          description: Местоположение пользователя
+        isActive:
+          type: boolean
+          description: Флаг активности пользователя
+      required:
+        - name
+        - email
+        - isActive
+    UserPhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор фотографии пользователя
+        userId:
+          type: integer
+          format: int64
+          description: Идентификатор пользователя, к которому относится фотография
+        data:
+          type: string
+          format: binary
+          description: Данные фотографии в формате base64
+      required:
+        - userId
+        - data
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор учетной записи
+        userId:
+          type: integer
+          format: int64
+          description: Идентификатор пользователя, к которому привязана учетная запись
+        isActive:
+          type: boolean
+          description: Флаг активности учетной записи
+      required:
+        - userId
+        - firstName
+        - isActive
+    Visit:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор посещения
+        accountId:
+          type: integer
+          format: int64
+          description: Идентификатор учетной записи пользователя
+        exhibitionId:
+          type: integer
+          format: int64
+          description: Идентификатор выставки
+        name:
+          type: string
+          description: Название посещения
+        dateStart:
+          type: string
+          format: date-time
+          description: Дата и время начала посещения
+        location:
+          type: string
+          description: Местоположение посещения
+        notes:
+          type: string
+          description: Примечания к посещению
+      required:
+        - accountId
+        - exhibitionId
+        - name
+        - dateStart
+    Museum:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        website:
+          type: string
+        opening_hours:
+          type: string
+    Exhibition:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+    Exhibit:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        year:
+          type: integer
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        price:
+          type: number
+        visit_date:
+          type: string
+          format: date-time
+    Checklist:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        created_date:
+          type: string
+          format: date-time
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        text:
+          type: string
+        isRead:
+          type: boolean
+        isSaved:
+          type: boolean
+        publication_date:
+          type: string
+          format: date-time
+    Route:
+      type: object
+      properties:
+        id:
+          type: integer
+        museum_id:
+          type: integer
+        waypoints:
+          type: array
+          items:
+            type: object
+            properties:
+              artwork_id:
+                type: integer
+              description:
+                type: string

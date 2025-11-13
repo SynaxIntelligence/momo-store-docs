@@ -1,0 +1,22 @@
+
+@startuml
+class News {
+  - id: int
+  --
+  + museumId: int
+  + name: String
+  + description: String
+  + data: byte[]
+  + dateTime: Timestamp
+}
+
+class NewsService {
+  + getNews (id: int): <News>
+  + addNews (news: <News>): void
+  + updateNews (id: int, newNews: <News>): <News>
+  + removeNews (id: int): void
+  --
+  + getNewsList (accountId: int): List<News>
+  + getNewsList (museumId: int): List<News>
+}
+@enduml

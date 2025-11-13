@@ -1,0 +1,22 @@
+# IDE
+.idea
+
+# CI CD
+.gitlab-ci.yml
+Dockerfile
+*compose.y*
+
+# Git
+#.git
+
+# Ignore node_modules directory
+node_modules
+
+.github
+dist
+pics
+
+# User folders
+hedgedoc
+comments
+auth

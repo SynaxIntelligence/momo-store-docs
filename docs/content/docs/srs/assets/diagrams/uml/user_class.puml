@@ -1,0 +1,22 @@
+
+@startuml
+class User {
+  - id: int
+  - snToken : string
+  --
+  + name : string
+  + email : string
+  + phone : string
+  + location : string
+  + authenticated : bool
+}
+
+class UserService {
+  - createUser (): void
+  - updateUser (): void
+  - deleteUser (): void
+  --
+  {static} + authenticateUser (): void
+  {static} + authenticateUser (token: string): string
+}
+@enduml

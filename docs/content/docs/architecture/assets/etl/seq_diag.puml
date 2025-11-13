@@ -1,0 +1,63 @@
+@startuml
+title Интеграция Система 1 и Система 2 через ETL Service и Broker
+
+autonumber
+
+actor "Пользователь" as User
+actor "Администратор" as Admin
+participant "Система 1-UI" as 1_UI
+participant "ETL Service" as ETL
+participant "Broker" as BROKER
+participant "Система 2 Core" as 2_CORE
+participant "Система 2-UI" as 2_UI
+participant "GitLab" as GITLAB
+participant "S3 MinIO" as MINIO
+
+== Формирование конфигурации ETL ==
+
+Admin -> MINIO: Загрузка файлов конфигурации маппинга
+MINIO -> Admin: Подтверждение сохранения
+ETL -> MINIO: Запрос конфигурации маппинга
+MINIO -> ETL: Отправка конфигурации
+
+== Аутентификация ETL и запрос модели ==
+
+ETL -> 1_UI: GET /api/login (Сервисный аккаунт)
+1_UI -> ETL: Токен доступа
+
+User -> 1_UI: Запрос модели (через UI)
+1_UI -> ETL: Запрос модели (REST API) с токеном
+ETL -> 1_UI: Ответ с моделью Система 1
+
+== Обработка модели и обновление Система 2 ==
+
+alt Взаимодействие через очередь
+    ETL -> BROKER: Публикация запроса обновления модели (updateModelQueue)
+    BROKER -> 2_CORE: Запрос модели (repositoryId, modelId)
+    2_CORE -> BROKER: Отправка модели Система 2
+    BROKER -> ETL: Доставка модели Система 2
+else Прямое взаимодействие
+    ETL -> 2_CORE: Запрос модели (repositoryId, modelId)
+    2_CORE -> ETL: Отправка модели Система 2
+end
+
+ETL -> 2_CORE: Преобразование модели Система 1 в Система 2
+2_CORE -> ETL: Подтверждение обработки модели
+
+== Хранение и редактирование манифестов ==
+
+ETL -> GITLAB: Загрузка YAML манифестов
+GITLAB -> ETL: Подтверждение загрузки
+
+User -> GITLAB: Редактирование YAML манифестов
+GITLAB -> 2_CORE: Обновленная модель Система 2
+
+== Просмотр модели в Система 2 ==
+
+User -> 2_UI: Просмотр модели в UI
+2_UI -> 1_CORE: Запрос модели Система 2
+1_CORE -> GITLAB: Запрос YAML манифестов
+GITLAB -> 1_CORE: Отправка модели Система 2
+1_CORE -> 2_UI: Отправка модели пользователю
+
+@enduml

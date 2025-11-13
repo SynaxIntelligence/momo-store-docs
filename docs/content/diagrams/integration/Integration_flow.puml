@@ -1,0 +1,25 @@
+@startuml
+skinparam MaxMessageSize 150
+Actor "Пользователь" as a order 15
+database "ЕКСЦ" as eksc order 15
+database "УК ЦСУПД" as uc order 15
+database "ЦСУПД" as csupd order 15
+database "КСИП ВНК" as ksip order 15
+database "СДП" as sdp order 15
+database "КСЦ МТР" as mtr order 15
+
+
+a -> eksc: Запрос в систему
+eksc -> uc: Запрос ролей в ЦСУПД
+uc -> csupd: Обмен ролями
+csupd -> eksc: Присвоение ролей в ЕКСЦ
+eksc -> ksip: Запрос данных из КСИП
+ksip -> eksc: Возврат данных
+ksip -> sdp: Запрос данных
+
+
+sdp -> ksip: Возврат данных
+ksip ->mtr: Отправка СО в статусе "Акцептована"
+eksc -> a: Возврат данных
+
+@enduml

@@ -1,0 +1,205 @@
+---
+openapi: 3.0.0
+info:
+  title: Искорка. Система бронирования
+  description: Кинотеатр. Система бронирования. Спецификация REST API.
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/SynaxIntelligence/iskorka/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://virtserver.swaggerhub.com/iskorka
+  description: Кинотеатр API системы бронирования
+security:
+- password:
+  - read
+  - write
+paths:
+  /api/v1/reservations:
+    get:
+      summary: Возвращает список свободных мест в виде массива
+      description: Проверяет количество забронированных мест на сеанс.
+      parameters:
+      - name: sessionid
+        in: query
+        description: Идентификатор сеанса
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Список свободных мест
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int64
+                  example: 1
+        "404":
+          description: Идентификатор сеанса не найден
+    post:
+      summary: Добавляет запись в реестр бронирований
+      description: Метод используется для бронирования места. Возвращает идентификатор добавленной записи.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1_reservations_body'
+      responses:
+        "200":
+          description: Идентификатор добавленной записи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+  /api/v1/reservations/{id}:
+    delete:
+      summary: Удаляет запись из реестра бронирований
+      description: Отменяет бронь. Admin only
+      parameters:
+      - name: id
+        in: path
+        description: Идентификатор бронирования
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Запись удалена из реестра
+    patch:
+      summary: Меняет статус бронирования для записи
+      description: Отменяет или восстанавливает бронь.
+      parameters:
+      - name: id
+        in: path
+        description: Идентификатор бронирования
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reservations_id_body'
+      responses:
+        "200":
+          description: Статус бронирования изменен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+  /api/v1/sessions/{id}:
+    put:
+      summary: Меняет время сеанса
+      description: Меняет время начала и время окончания сеанса.
+      parameters:
+      - name: id
+        in: path
+        description: Идентификатор бронирования
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sessions_id_body'
+      responses:
+        "200":
+          description: Время сеанса изменено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sessions_id_body'
+    patch:
+      summary: Меняет время сеанса
+      description: Меняет время начала и время окончания сеанса.
+      parameters:
+      - name: id
+        in: path
+        description: id бронирования
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sessions_id_body_1'
+      responses:
+        "200":
+          description: Время сеанса изменено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sessions_id_body'
+components:
+  schemas:
+    v1_reservations_body:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+        seatId:
+          type: integer
+        visitorName:
+          type: string
+    inline_response_200:
+      type: object
+      properties:
+        id:
+          type: integer
+    reservations_id_body:
+      type: object
+      properties:
+        reservationId:
+          type: integer
+        isReserved:
+          type: boolean
+    inline_response_200_1:
+      type: object
+      properties:
+        movieName:
+          type: string
+        seatNo:
+          type: integer
+        isReserved:
+          type: boolean
+    sessions_id_body:
+      type: object
+      properties:
+        movieId:
+          type: integer
+        hallId:
+          type: integer
+        sessionStartDateTime:
+          type: string
+        sessionEndDateTime:
+          type: string
+    sessions_id_body_1:
+      type: object
+      properties:
+        sessionStartDateTime:
+          type: string
+        sessionEndDateTime:
+          type: string
+  securitySchemes:
+    password:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: http://example.com/oauth/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources

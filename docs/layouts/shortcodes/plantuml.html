@@ -1,0 +1,13 @@
+{{ $raw := .Get "file" }}
+{{ $file := replaceRE "^/" "" $raw }}
+
+<div class="download-image-container">
+<!--<img id="plantuml-{{ .Get `id` }}" class="zoom-img" data-plantuml-file="{{ .Get `file` | relURL }}" />-->
+    <img id="plantuml-{{ .Get `id` }}" class="zoom-img" data-plantuml-file="{{ $file | relURL }}" />
+</div>
+
+<!--needed if zoom-img class is used-->
+<div id="zoom-overlay" class="zoom-overlay hidden">
+    <span class="close-btn">&times;</span>
+    <img id="zoomed-image" src="" alt="Zoomed Image" />
+</div>

@@ -1,0 +1,19 @@
+
+@startuml
+class Museum {
+  - id: int
+  --
+  + name: String
+  + workHours: String
+  + location: String
+  + web: String
+  + description: String
+}
+
+class MuseumService {
+    + getMuseum (id: int): <Museum>
+    + addMuseum (museum: <Museum>): void
+    + updateMuseum (id: int, newMuseum: <Museum>): <Museum>
+    + removeMuseum (id: int): void
+}
+@enduml

@@ -1,0 +1,84 @@
+
+@startuml
+
+scale 0.5
+left to right direction
+skinparam linetype ortho
+'skinparam classAttributeIconSize 0
+skinparam classAttributeFontSize 12
+
+<style>
+.classDiagram {
+  class {
+      header {
+        FontSize 16
+        FontStyle bold
+        BackgroundColor lightgray
+      }
+  }
+}
+</style>
+
+package "Museumium" {
+
+    !include account_class.puml
+    !include checklist_item_class.puml
+    !include exhibit_class.puml
+    !include exhibition_class.puml
+    !include location_class.puml
+    !include museum_class.puml
+    !include museum_photo_class.puml
+    !include news_class.puml
+    !include ticket_class.puml
+    !include user_class.puml
+    !include user_photo_class.puml
+    !include visit_class.puml
+    !include route_class.puml
+
+    class User <<classDiagram>> {
+
+    }
+
+    class VisitService <<classDiagram>> {
+
+    }
+    User --> UserPhotoService: uses
+    User --> UserService: uses
+    User --> AccountService: uses
+    User --> RouteService: uses
+
+    AccountService "1" -[dashed]-> "1" Account: provides
+    UserPhotoService "1" -[dashed]-> "0..*" UserPhoto: provides
+
+    MuseumService "1" -[dashed]-> "0..*" Museum: provides
+    MuseumService --> MuseumPhotoService: uses
+    MuseumService --> ExhibitionService: uses
+
+    VisitService "1" -[dashed]-> "0..*" Visit: provides
+    VisitService --> ChecklistService: uses
+    VisitService --> AccountService: uses
+    VisitService --> TicketService: uses
+    VisitService -> ExhibitionService: uses
+
+    ChecklistService "1" -[dashed]-> "0..*" ChecklistItem: provides
+
+    ExhibitionService "1" -[dashed]-> "0..*" Exhibition: provides
+    ExhibitionService --> ExhibitService: uses
+
+    ExhibitService "1" -[dashed]-> "0..*" Exhibit: provides
+    ExhibitService --> LocationService: uses
+
+    TicketService "1" -[dashed]-> "0..*" Ticket: provides
+
+    LocationService "1" -[dashed]---> "0..*" Location: provides
+
+    MuseumPhotoService "1" -[dashed]-> "0..*" MuseumPhoto: provides
+
+    NewsService "1" -[dashed]left-> "0..*" News: provides
+    NewsService --> MuseumService: uses
+
+    RouteService "1" -[dashed]left-> "0..*" Route: provides
+    RouteService --> VisitService: uses
+
+}
+@enduml

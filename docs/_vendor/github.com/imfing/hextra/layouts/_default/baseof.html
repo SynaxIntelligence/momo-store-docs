@@ -1,0 +1,33 @@
+{{ $customCSS := resources.Get "css/custom.css" | minify | fingerprint }}
+{{ $imageCSS := resources.Get "css/image.css" | minify | fingerprint }}
+{{ $tagsCSS := resources.Get "css/tags.css" | minify | fingerprint }}
+{{ $zoomimgJS := resources.Get "js/zoomimg.js" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $customCSS.RelPermalink }}">
+<link rel="stylesheet" href="{{ $imageCSS.RelPermalink }}">
+<link rel="stylesheet" href="{{ $tagsCSS.RelPermalink }}">
+<link rel="stylesheet" href='{{ "css/fontawesome/css/all.css" | relURL }}'>
+<!--<link rel="stylesheet" href="/css/fontawesome/css/all.css">-->
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">-->
+
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<!--<script src="/js/config.js"></script>-->
+<!--<script src="/js/pako-deflate.js"></script>-->
+<!--<script src="/js/plantuml-render.js"></script>-->
+<script data-goatcounter="https://snx.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js" defer></script>
+<script src='{{ "js/config.js" | relURL }}' defer></script>
+<script src='{{ "js/pako-deflate.js" | relURL }}' defer></script>
+<script src='{{ "js/plantuml-render.js" | relURL }}' defer></script>
+<script src='{{ "js/viewer-static.min.js" | relURL }}' defer></script>
+<script src='{{ $zoomimgJS.RelPermalink }}'></script>
+  {{- partial "head.html" . -}}
+  <body dir="{{ .Site.Language.LanguageDirection | default `ltr` }}">
+    {{- partial "navbar.html" . -}}
+    {{- block "main" . }}{{ end -}}
+    {{- if or (eq .Site.Params.footer.enable nil) (.Site.Params.footer.enable) }}
+      {{ partial "footer.html" . }}
+    {{ end }}
+    {{ partial "scripts.html" . }}
+  </body>
+</html>

@@ -1,0 +1,48 @@
+@startuml C4_Components
+
+!include <c4/C4_Container.puml>
+!include <c4/C4_Component.puml>
+!include <tupadr3/devicons/react>
+!include <tupadr3/devicons2/spring.puml>
+!include <tupadr3/devicons/postgresql.puml>
+
+'skinparam linetype polyline
+'skinparam linetype ortho
+skinparam ParticipantPadding 130
+
+title \n= Диаграмма доменов\n\n
+
+AddElementTag("subdomain", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="black")
+
+Enterprise_Boundary(future_2_co, "Будущее 2.0") {
+
+    System_Boundary(customer_domain, "Domain: Customer Management") {
+        Container(crm, "Subdomain: CRM", "ASP.NET", "Handles customer relationships", $tags="subdomain")
+    }
+
+    System_Boundary(medical_domain, "Domain: Medical Record") {
+        Container(medical_record, "Subdomain:\n Medical Record Management", "ASP.NET", "Handles sensitive medical data", $tags="subdomain")
+    }
+
+    System_Boundary(fiscal_domain, "Domain: Finance") {
+        Container(financial_history, "Subdomain:\n Financial History", "ASP.NET", "Handles financial records", $tags="subdomain")
+        Container(invoicing, "Subdomain:\n Invoices", "ASP.NET", "Handles invoicing", $tags="subdomain")
+        Container(credit, "Subdomain:\n Credit Data", "ASP.NET", "Handles credits", $tags="subdomain")
+    }
+
+    System_Boundary(bi_domain, "Domain: BI") {
+        Container(reports, "Subdomain:\n BI Reports", "ASP.NET", "Handles report generation and visualization", $tags="subdomain")
+    }
+
+    System_Boundary(employee_domain, "Domain: Employee Management") {
+        Container(employee, "Subdomain:\n Employee Management", "ASP.NET", "Handles employee management", $tags="subdomain")
+    }
+
+    System_Boundary(inventory_domain, "Domain: Inventory") {
+        Container(inventory, "Subdomain:\n Inventory Management", "ASP.NET", "Handles inventory", $tags="subdomain")
+    }
+}
+
+
+footer drawn with PlantUML v. %version() and C4-PlantUML v. C4Version()
+@enduml

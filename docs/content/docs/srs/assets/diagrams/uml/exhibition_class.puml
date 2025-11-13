@@ -1,0 +1,21 @@
+
+@startuml
+class Exhibition {
+  - id: int
+  --
+  + name: String
+  + location: String
+  + startDate: Date
+  + endDate: Date
+  + description: String
+}
+
+class ExhibitionService {
+  + getExhibition (id: int): <Exhibition>
+  + addExhibition (exhibition: <Exhibition>): void
+  + updateExhibition (id: int, newExhibition: <Exhibition>): <Exhibition>
+  + removeExhibition (id: int): void
+  --
+  + getExhibitionList (museumId: int): List<Exhibition>
+}
+@enduml

@@ -1,0 +1,26 @@
+<!--TODO: drawio plugin-->
+{{- $file := .Get "file" -}}
+{{- $xmlContent := readFile (printf "%s" $file) -}}
+{{- $escapedXml := replace (replace $xmlContent "\"" "\\\"") "\n" " " -}}
+
+<div class="mxgraph" data-mxgraph='{
+  "highlight": "#0000ff",
+  "xml": "{{ $escapedXml }}"
+}'></div>
+
+
+<style>
+    .mxgraph {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        border: 0 #ddd;
+        margin: 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .geDiagramContainer {
+        color-scheme: dark !important;
+    }
+
+</style>

@@ -1,0 +1,71 @@
+- term: Mozilla Developer Network
+  definition: A great place to read docs
+  abbr: MDN
+  category: "docs"
+- term: Request for comment
+  definition: A publication from the standards-setting bodies of the internet
+  abbr: RFC
+  category: "protocols"
+- term: Request for proposal
+  definition: A call for proposals
+  abbr: RFP
+- term: Transmission Control Protocol
+  definition: A bidirectional protocol to deliver a reliable, ordered, and error-checked stream of octets between applications.
+  abbr: TCP
+  category: "protocols"
+- term: User Datagram Protocol
+  definition: A connectionless communication protocol.
+  abbr: UDP
+  category: "protocols"
+
+- term: Static Site Generator
+  definition: >
+    Static Site Generator (SSG) — это инструмент, который автоматически генерирует статические веб-страницы на основе шаблонов и данных.
+    SSG используется для создания высокопроизводительных и безопасных веб-сайтов, которые могут быть размещены на любом веб-сервере или в облачных хранилищах.
+    Эти генераторы особенно популярны для блогов, документации и корпоративных сайтов благодаря своей простоте и эффективности
+  abbr: SSG
+  category: "general"
+- term: OpenMetadata
+  definition: Каталог данных.
+  abbr: OpenMetadata
+  category: "saas"
+- term: S3
+  definition: Объектное хранилище.
+  abbr: S3
+  category: "saas"
+- term: Grafana
+  definition: Свободная программная система визуализации данных, ориентированная на данные систем ИТ-мониторинга. Реализована как веб-приложение в стиле «приборных панелей» с диаграммами, графиками, таблицами, предупреждениями.
+  abbr: Grafana
+  category: "saas"
+- term: Keycloak
+  definition: Open Source Identity and Access Management Tool.
+  abbr: Keycloak
+  category: "saas"
+- term: RABBIT MQ
+  definition: >
+    Открытый брокер сообщений, который реализует протокол AMQP (Advanced Message Queuing Protocol).
+    Он используется для организации обмена сообщениями между различными приложениями и сервисами в распределённых системах.
+  abbr: RabbitMQ
+  category: "products"
+- term: Serilog
+  definition: >
+    Serilog — это библиотека структурированного ведения журнала для .NET-приложений.
+    Она разработана для предоставления простого и мощного способа генерации, обогащения и вывода данных журнала.
+    Serilog широко используется благодаря своей гибкости и возможности интеграции с различными приемниками журналов, что делает её популярным выбором для разработчиков, ищущих надежные решения для ведения журнала.
+  abbr: Serilog
+  category: "libs"
+
+- term: Система 1
+  definition: Платформа для разработки и тестирования архитектурных решений.
+  abbr: S1
+  category: "products"
+- term: Система 2
+  definition: Инструмент описания архитектуры через код (Architecture as a code).
+  abbr: S2
+  category: "products"
+
+- term: Архитектурный портал
+  definition: >
+    Архитектурный портал — централизованное решение для управления жизненным циклом архитектурных моделей.
+  abbr: AP
+  category: "general"

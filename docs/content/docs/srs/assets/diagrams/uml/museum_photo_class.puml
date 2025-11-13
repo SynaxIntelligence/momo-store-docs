@@ -1,0 +1,16 @@
+
+@startuml
+class MuseumPhoto {
+  - id: int
+  --
+  + museumId: int
+  + data: byte[]
+}
+
+class MuseumPhotoService {
+  + getPhoto (id: int): byte[]
+  + addPhoto (museumId: int, data: byte[]): void
+  + updatePhoto (id: int, data: byte[]): void
+  + removePhoto (id: int): void
+}
+@enduml

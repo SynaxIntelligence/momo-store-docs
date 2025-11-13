@@ -1,0 +1,207 @@
+# Configuration
+baseURL: 'https://synaxintelligence.github.io/'
+relativeURLs: false
+canonifyURLs: false
+languageCode: ru
+title: 'Архитектурный портал'
+#theme: "github.com/imfing/hextra"
+#theme: 'hextra'
+
+enableGitInfo: true
+
+# services:
+#   googleAnalytics:
+#     ID: G-MEASUREMENT_ID
+
+#outputs:
+#  home: [HTML]
+#  page: [HTML]
+#  section: [HTML, RSS]
+
+#services:
+#  disqus:
+#    shortname: your-disqus-shortname
+
+defaultContentLanguage: ru
+languages:
+  ru:
+    languageName: Русский
+    weight: 1
+    title: Архитектурный портал
+    params:
+      reading_speed: 179
+  en:
+    languageName: English
+    weight: 1
+    title: Architectural portal
+#
+module:
+  imports:
+#    - disable: false
+#      ignoreConfig: false
+#      ignoreImports: false
+    - path: "github.com/imfing/hextra"
+#    - path: github.com/hugomods/swagger-ui
+
+#module:
+#  hugoVersion:
+#    extended: true
+#    min: "0.112.0"
+#
+##  workspace: hugo.work
+##  imports:
+##    path: github.com/imfing/hextra
+#
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+
+enableInlineShortcodes: true
+
+#taxonomies:
+#  author: author
+#  category: categories
+#  tag: tags
+
+menu:
+  main:
+    - identifier: documentation
+      name: Документация
+      pageRef: /docs
+      weight: 1
+    - identifier: blog
+      name: Инструкции
+      pageRef: /instructions
+      weight: 2
+    - identifier: showcase
+      name: Архив
+      pageRef: /showcase
+      weight: 3
+    - identifier: about
+      name: О портале
+      pageRef: /about
+      weight: 4
+    - name: Поиск
+      weight: 5
+      params:
+        type: search
+    - name: Github
+      weight: 6
+      url: "https://github.com/SynaxIntelligence/snx-arch"
+      params:
+        icon: github
+#    - name: Войти
+#      weight: 7
+#      url: "https://keycloak.synax.ru/realms/synax/protocol/openid-connect/"
+#      params:
+#        icon: login
+
+  sidebar:
+    - identifier: about
+      name: "О портале"
+      pageRef: "/about"
+      weight: 2
+    - identifier: faq
+      name: "FAQ"
+      pageRef: "/faq"
+      weight: 3
+
+params:
+  gitlabRepoBase: "https://github.com/SynaxIntelligence/snx-arch"
+  description: Modern, responsive, batteries-included Hugo theme for creating beautiful static websites.
+
+  navbar:
+    displayTitle: true
+    displayLogo: true
+    logo:
+      path: images/synax_sign_white.png
+      dark: images/synax_sign_dark.png
+      width: 20
+      height: 10
+      link: /snx-arch/
+    width: wide
+
+  page:
+    # full (100%), wide (90rem), normal (1280px)
+    width: normal
+
+  theme:
+    # light | dark | system
+    default: system
+    displayToggle: true
+
+  footer:
+    enable: true
+    displayCopyright: true
+    displayPoweredBy: true
+    width: normal
+
+  displayUpdatedDate: true
+  dateFormat: "January 2, 2006"
+
+  # Search
+  # flexsearch is enabled by default
+  search:
+    enable: true
+    type: flexsearch
+
+    flexsearch:
+      # index page by: content | summary | heading | title
+      index: content
+
+#TODO: fix deployment
+#deployment:
+#  confirm: false
+#  dryRun: false
+#  force: false
+#  invalidateCDN: true
+#  maxDeletes: 256
+#  target: "production"
+#  workers: 10
+#  matchers:
+#    - cacheControl: max-age=31536000, no-transform, public
+#      gzip: true
+#      pattern: ^.+\.(js|css|svg|ttf)$
+#    - cacheControl: max-age=31536000, no-transform, public
+#      gzip: false
+#      pattern: ^.+\.(png|jpg)$
+#    - contentType: application/xml
+#      gzip: true
+#      pattern: ^sitemap\.xml$
+#    - gzip: true
+#      pattern: ^.+\.(html|xml|json)$
+#  order:
+#    - .jpg$
+#    - .gif$
+#  targets:
+#    - name: production
+#      exclude: '**.{heic,psd}'
+#      url: "s3://hugodocs/v1?region=ru-east-rack-2&endpoint=http://localhost:9000&awssdk=v2&use_path_style=true"
+
+##  editURL:
+##    enable: true
+##    base: "https://github.com/imfing/hextra/edit/main/exampleSite/content"
+#
+#  blog:
+#    list:
+#      displayTags: true
+#
+#  comments:
+#    enable: false
+#    type: giscus
+
+#    # https://giscus.app/
+#    giscus:
+#      repo: imfing/hextra
+#      repoId: R_kgDOJ9fJag
+#      category: General
+#      categoryId: DIC_kwDOJ9fJas4CY7gW
+#      # mapping: pathname
+#      # strict: 0
+#      # reactionsEnabled: 1М
+#      # emitMetadata: 0
+#      # inputPosition: top
+#      # lang: en

@@ -1,0 +1,19 @@
+
+@startuml
+class Visit {
+  - id: int
+  --
+  + accountId: int
+  + exhibitionId: int
+  + name: String
+  + dateStart: Date
+  + notes: String
+}
+
+class VisitService {
+  + getVisit (id: int): <Visit>
+  + addVisit (visit: <Visit>): void
+  + updateVisit (id: int, newVisit: <Visit>): <Visit>
+  + removeVisit (id: int): void
+}
+@enduml

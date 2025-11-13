@@ -1,0 +1,57 @@
+%%{
+  init: {
+    'theme':'dark',
+    'themeVariables': {
+      'fontFamily': 'Inter, sans-serif',
+      'primaryColor': '#3b82f6',
+      'edgeLabelBackground':'#ffffff'
+    }
+  }
+}%%
+
+graph TD
+subgraph External Templates [🦊 External CI Templates]
+T1["📄 .pre.yml"]
+T2["🔢 version.gitlab-ci.yml"]
+T3["🐳 docker-build-push.gitlab-ci.yml"]
+T4["🚀 helm-deploy.gitlab-ci.yml"]
+end
+
+subgraph External Config [📁 Config Repo]
+CONFIG["🌿 Environment Configurations"]
+end
+
+subgraph Pipeline [🔁 Pipeline Flow]
+LINT["🧹 Lint"]
+VERSION["🔢 Version"]
+BUILD["🛠️ Build"]
+DOCKER["🐳 Docker"]
+DEPLOY["🚀 Deploy"]
+end
+
+subgraph Rules [📐 Rules]
+R1["📝 changes in CONTEXT_DIR/**/*"]
+end
+
+subgraph Argo [Argo]
+ARGOCD["🎯 Argo"]
+end
+
+T1 --> LINT
+T2 --> VERSION
+T3 --> DOCKER
+T4 --> DEPLOY
+
+LINT --> VERSION
+VERSION --> BUILD
+BUILD --> DOCKER
+VERSION --> DEPLOY
+BUILD --> DEPLOY
+DOCKER --> DEPLOY
+DEPLOY --> CONFIG
+
+CONFIG --> ARGOCD
+
+R1 --> VERSION
+R1 --> BUILD
+R1 --> DOCKER

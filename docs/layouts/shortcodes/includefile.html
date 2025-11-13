@@ -1,0 +1,11 @@
+{{$file := .Get "file"}}
+
+{{- if eq (.Get "markdown") "true" -}}
+{{- $file  | readFile | markdownify -}}
+{{- else -}}
+{{ $text := $file | readFile }}
+{{ $array := split $text "\n" }}
+{{ range $array }}
+{{ (print . "\n") }}
+{{ end }}
+{{- end -}}

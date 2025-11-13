@@ -1,0 +1,72 @@
+@startuml
+' Setup dark theme and font
+skinparam backgroundColor lightgray
+skinparam defaultTextAlignment center
+skinparam node {
+    BackgroundColor<<template>> #3b82f6
+    BackgroundColor<<config>> #2d6cdf
+    BackgroundColor<<pipeline>> #1158c7
+    BackgroundColor<<rules>> #3e3e3e
+    BackgroundColor<<argo>> #5f9ea0
+'    FontColor white
+'    BorderColor white
+}
+skinparam defaultFontName "Inter, sans-serif"
+
+' External Templates
+package "🦊 External CI Templates" <<template>> {
+    node "📄 .pre.yml" as T1
+    node "🔢 version.gitlab-ci.yml" as T2
+    node "🐳 docker-build-push.gitlab-ci.yml" as T3
+    node "🚀 helm-deploy.gitlab-ci.yml" as T4
+}
+
+' Source Code Repo
+package "📁 Source Code Repo" <<src>> {
+    node "🌿 Source Code" as SRC
+}
+
+' External Config
+package "📁 Config Repo" <<config>> {
+    node "🌿 Environment Configurations" as CONFIG
+}
+
+' Pipeline Flow
+package "🔁 Pipeline Flow" <<pipeline>> {
+    node "🧹 Lint" as LINT
+    node "🔢 Version" as VERSION
+    node "🛠️ Build" as BUILD
+    node "🐳 Docker" as DOCKER
+    node "🚀 Deploy" as DEPLOY
+}
+
+' Rules
+package "📐 Rules" <<rules>> {
+    node "📝 changes in CONTEXT_DIR/**/*" as R1
+}
+
+' Argo CD
+package "Argo" <<argo>> {
+    node "🎯 Argo" as ARGOCD
+}
+
+' Connections
+T1 --> LINT
+T2 --> VERSION
+T3 --> DOCKER
+T4 --> DEPLOY
+
+LINT --> VERSION
+SRC --> BUILD
+VERSION --> BUILD
+BUILD --> DOCKER
+VERSION --> DEPLOY
+BUILD --> DEPLOY
+DOCKER --> DEPLOY
+DEPLOY --> CONFIG
+CONFIG --> ARGOCD
+
+R1 --> VERSION
+R1 --> BUILD
+R1 --> DOCKER
+@enduml

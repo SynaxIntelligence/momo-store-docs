@@ -1,0 +1,138 @@
+@startgantt
+
+'!theme superhero-outline
+title Дорожная карта разработки основного функционала решения (MVP)
+
+<style>
+ganttDiagram {
+  timeline {
+'    FontColor white
+    FontStyle bold
+    FontSize 16
+ }
+ task {
+    RoundCorner 5
+ }
+ separator {
+         BackgroundColor LightGray
+         LineStyle 8.0;3.0
+         LineColor Gray
+         LineThickness 1.0
+         FontSize 16
+         FontStyle bold
+         FontColor Black
+         Margin 5
+         Padding 6
+     }
+}
+</style>
+
+language ru
+printscale quarterly zoom 15
+
+Project starts the 3rd of June 2025
+
+--**Проектирование**--
+[Начало проекта] happens at 1st of June 2025 and is 0% completed
+[Оценка требований] starts at 1st June 2025 and requires 5 days and is 0% completed
+[Разработка документации] requires 12 days and is 0% completed
+[Разработка архитектуры] requires 7 days and is 0% completed
+
+[Начало проекта] --> [Разработка документации]
+[Начало проекта] --> [Оценка требований]
+[Оценка требований] --> [Разработка архитектуры]
+[Разработка архитектуры] --> [Начало разработки]
+
+[Начало разработки] requires 5 days and is 0% completed
+
+--**Интернет-банк**--
+[Создание Сервиса для расчета и ведения депозитов (ib-deposit-srv), FR-4, FR-5] as [ib-dep] links to [[functional-reqs.html#SR-001-reg]]
+[Доработка интерфейса интернет-банка (FR-4, FR-5)] as [ib-gui] links to [[proto.html]]
+[Развертывание БД сервиса ведения ставок депозитов] as [ib-db] links to [[proto.html]]
+[Реализация кэширования справочных данных] as [ib-cache] links to [[proto.html]]
+[Доработка Сервиса Аутентификации (MFA)] as [ib-auth] links to [[functional-reqs.html#SR-002-auth]]
+[Создание Сервиса Уведомлений (FR-9)] as [ib-message] links to [[functional-reqs.html#SR-002-auth]]
+[Интеграция ИБ с СМС-шлюзом оператора (FR-9)] as [ib-int] links to [[functional-reqs.html#SR-002-auth]]
+
+[ib-dep] requires 15 days and is 0% completed
+[ib-gui] requires 15 days and is 0% completed
+[ib-db] requires 15 days and is 0% completed
+[ib-cache] requires 15 days and is 0% completed
+[ib-auth] requires 5 days and is 0% completed
+[ib-message] requires 5 days and is 0% completed
+[ib-int] requires 15 days and is 0% completed
+
+[Начало разработки] --> [ib-dep]
+[Начало разработки] --> [ib-db]
+[Начало разработки] --> [ib-gui]
+[ib-dep] --> [ib-auth]
+[ib-dep] --> [ib-cache]
+[ib-dep] --> [ib-message]
+[ib-message] --> [ib-int]
+
+--**Сайт**--
+[Доработка компонентов интерфейса Сайта (FR-1, FR-2)] as [web-gui] links to [[functional-reqs.html#SR-004-profile]]
+[Настройка взаимодействия с сервисом депозитов (ib-deposit-srv), FR-1, FR-2] as [web-api] links to [[functional-reqs.html#SR-005-museum-lst]]
+[Настройка кэширования при запросах справочных данных] as [web-cache] links to [[functional-reqs.html#SR-006-museum-details]]
+
+[web-gui] requires 10 days and is 0% completed
+[web-api] requires 7 days and is 0% completed
+[web-cache] requires 7 days and is 0% completed
+
+[Начало разработки] --> [web-gui]
+[web-gui] --> [web-api]
+[web-api] --> [web-cache]
+
+--**АБС**--
+[Создание Сервиса расчета и ведения ставок депозитов (abs-deposit-srv), FR-10, FR-12] as [abs-dep] links to [[functional-reqs.html#SR-009-checklist]]
+[Развертывание БД сервиса ведения ставок депозитов (abs-deposit-data-db)] as [abs-dep-db] links to [[proto.html]]
+[Реализация Брокера сообщений Apache Kafka (FR-12)] as [abs-broker] links to [[functional-reqs.html#SR-010-news]]
+[Создание LB и API Gateway для взаимодействия с сервисами кол-центра (FR-3, FR-11)] as [abs-lbgw] links to [[functional-reqs.html#SR-010-news]]
+[Реализация S3 хранилища для выгрузки файлов (FR-13, FR-15)] as [abs-s3] links to [[functional-reqs.html#SR-010-news]]
+[Настройка выгрузки ставок из сервиса депозитов (АБС) FR-15)] as [abs-int] links to [[functional-reqs.html#SR-010-news]]
+[Интеграция сервисов партнерского кол-центра с сервером S3 (FR-14)] as [abs-call-int] links to [[functional-reqs.html#SR-010-news]]
+
+[**PRERELEASE**] as [prerelease] links to [[functional-reqs.html#SR-010-news]]
+
+[abs-dep] requires 25 days and is 0% completed
+[abs-dep-db] requires 10 days and is 0% completed
+[abs-broker] requires 15 days and is 0% completed
+[abs-lbgw] requires 15 days and is 0% completed
+[abs-s3] requires 15 days and is 0% completed
+[abs-int] requires 15 days and is 0% completed
+[abs-call-int] requires 25 days and is 0% completed
+
+[prerelease] happens at [abs-call-int]'s end and is 0% completed
+
+[ib-message] --> [abs-dep]
+[ib-message] --> [abs-dep-db]
+[abs-dep] --> [abs-broker]
+[abs-broker] --> [abs-s3]
+[abs-s3] --> [abs-int]
+[abs-s3] --> [abs-call-int]
+[abs-broker] --> [abs-lbgw]
+[abs-call-int] --> [prerelease]
+
+--**Инфраструктура и мониторинг**--
+[Настройка балансировщика для запросов с сайта] as [web-lb] links to [[functional-reqs.html#SR-009-checklist]]
+[Создание Сервиса мониторинга и логирования] as [mon] links to [[functional-reqs.html#SR-009-checklist]]
+[Развертывание БД сервиса] as [mon-db] links to [[functional-reqs.html#SR-009-checklist]]
+[Настройка интеграций с релевантными сервисами] as [mon-int] links to [[functional-reqs.html#SR-009-checklist]]
+[Создание дашбордов с метриками] as [mon-dshbrd] links to [[functional-reqs.html#SR-009-checklist]]
+[**RELEASE**] as [release] links to [[functional-reqs.html#SR-009-checklist]]
+
+[web-lb] requires 15 days and is 0% completed
+[mon] requires 25 days and is 0% completed
+[mon-db] requires 10 days and is 0% completed
+[mon-int] requires 10 days and is 0% completed
+[mon-dshbrd] requires 15 days and is 0% completed
+[release] happens at [mon-dshbrd]'s end and is 0% completed
+
+[prerelease] --> [web-lb]
+[prerelease] --> [mon]
+[prerelease] --> [mon-db]
+[mon] --> [mon-int]
+[mon] --> [mon-dshbrd]
+[mon-dshbrd] --> [release]
+
+@endgantt

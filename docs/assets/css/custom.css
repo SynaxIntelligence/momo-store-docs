@@ -1,0 +1,191 @@
+/*https://imfing.github.io/hextra/docs/advanced/customization/*/
+
+/*:root {*/
+/*    --primary-hue: 100deg;*/
+/*    --primary-saturation: 90%;*/
+/*    --primary-lightness: 50%;*/
+/*}*/
+/*.hextra-card {*/
+/*    background-color: lightgray;*/
+/*}*/
+/*details {*/
+/*    background-color: #f0f0f0;*/
+/*}*/
+
+.glossary {
+    font-family: Arial, sans-serif;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.glossary dt {
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+.glossary dd {
+    margin: 5px 0 15px 20px;
+    color: #666;
+}
+
+.glossary dt::after {
+    /*content: ":";*/
+    margin-left: 5px;
+}
+
+.glossary dd::before {
+    /*content: "–";*/
+    margin-right: 5px;
+    color: #999;
+}
+
+.glossary dt, .glossary dd {
+    line-height: 1.6;
+}
+
+/* Isso Comments - GitHub Discussions Style */
+#isso-thread {
+    font-family: "system-ui";
+    max-width: 900px;
+    margin: 0 auto;
+    color: #e0e0e0;
+}
+
+/* Comment Container */
+#isso-thread .isso-comment {
+    background: #161b22; /* GitHub dark mode background */
+    border: 1px solid #30363d;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border 0.2s ease-in-out;
+}
+
+#isso-thread .isso-comment:hover {
+    border-color: #1f6feb;
+}
+
+/* Author and Timestamp */
+#isso-thread .isso-comment-header {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #8b949e;
+}
+
+#isso-thread .isso-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+#isso-thread .isso-comment-author {
+    font-weight: 600;
+    color: #58a6ff;
+}
+
+#isso-thread .isso-comment-time {
+    font-size: 0.8rem;
+    color: #8b949e;
+    margin-left: 8px;
+}
+
+/* Comment Body */
+#isso-thread .isso-comment-text {
+    line-height: 1.6;
+    color: #e6edf3;
+    font-size: 0.95rem;
+    padding-top: 8px;
+}
+
+/* Actions: Reply, Edit, Delete */
+#isso-thread .isso-comment-footer {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+#isso-thread .isso-comment-footer a {
+    font-size: 0.85rem;
+    color: #58a6ff;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+#isso-thread .isso-comment-footer a:hover {
+    background: #21262d;
+}
+
+/* Comment Box */
+#isso-thread textarea {
+    background: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 10px;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 8px;
+}
+
+#isso-thread textarea:focus {
+    border-color: #1f6feb;
+    outline: none;
+}
+
+/* Submit Button */
+#isso-thread .isso-post-action input[type="submit"] {
+    background: #238636;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#isso-thread .isso-post-action input[type="submit"]:hover {
+    background: #2ea043;
+}
+
+/* Nested Comments */
+#isso-thread .isso-comment > .isso-follow-up {
+    border-left: 2px solid #30363d;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+/* Isso Form Fields - Name, Email, Website */
+#isso-thread input[name="author"],
+#isso-thread input[name="email"],
+#isso-thread input[name="website"] {
+    font-family: "system-ui";
+    font-size: 1rem;
+    background: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 10px;
+    border-radius: 6px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.isso-input-wrapper {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.isso-auth-section{
+    display: inline-grid;
+    grid-template-columns: 1fr 4fr;
+
+}

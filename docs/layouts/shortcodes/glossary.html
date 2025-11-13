@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/css/custom.css">
+
+{{- $arg := (.Get 0) -}}
+{{- range sort .Site.Data.termbase "term" -}}
+    <dl class="glossary">
+        <dt>{{- .term }}{{ with .abbr }} ({{ . -}}){{ end -}}
+        </dt>
+        <dd>{{- .definition -}}</dd>
+    </dl>
+{{- end -}}
+
+

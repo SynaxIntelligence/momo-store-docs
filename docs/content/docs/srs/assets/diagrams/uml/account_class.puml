@@ -1,0 +1,16 @@
+
+@startuml
+class Account {
+  - id: int
+  - userId: int
+  --
+  + isActive : bool
+}
+
+class AccountService {
+  + createAccount (userId: int): void
+  + updateAccount (id: int): void
+  {static} + activateAccount (): void
+  {static} + deactivateAccount (): void
+}
+@enduml

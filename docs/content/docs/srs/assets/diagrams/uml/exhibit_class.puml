@@ -1,0 +1,20 @@
+
+@startuml
+class Exhibit {
+  - id: int
+  --
+  + locationId: int
+  + name: String
+  + data: byte[]
+  + description: String
+}
+
+class ExhibitService {
+  + getExhibit (id: int): <Exhibit>
+  + addExhibit (exhibit: <Exhibit>): void
+  + updateExhibit (id: int, newExhibit: <Exhibit>): <Exhibit>
+  + removeExhibit (id: int): void
+  --
+  + getExhibitList (exhibitionId: int): List<Exhibit>
+}
+@enduml

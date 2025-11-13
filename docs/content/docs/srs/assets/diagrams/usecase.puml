@@ -1,0 +1,101 @@
+
+@startuml
+
+scale 0.9
+
+'skinparam linetype ortho
+skinparam actorStyle Hollow
+skinparam ArrowFontSize 12
+skinparam UsecaseFontSize 12
+skinparam Shadowing false
+
+left to right direction
+:Пользователь: as User
+:Администратор: as Admin
+:Партнер музея: as Partner
+
+rectangle Musemium {
+    usecase "Заполнить поле" as uc_common_1
+    usecase "Зарегистрироваться" as uc_reg_1
+    usecase "Зарегистрироваться \n через соцсети" as uc_reg_2
+    usecase "Авторизоваться" as uc_auth_1
+    usecase "Авторизоваться \n через соцсети" as uc_auth_2
+    usecase "Заполнить профиль" as uc_prof_1
+    usecase "Добавить фото \n к профилю" as uc_prof_2
+    usecase "Загрузить файл на сервис" as uc_prof_2.1
+    usecase "Редактировать профиль" as uc_prof_3
+    usecase "Удалить аккаунт" as uc_acc_1
+    usecase "Просмотреть список музеев" as uc_museum_1
+    usecase "Просмотреть подробную \n информацию о музее" as uc_mus_det_1
+    usecase "Запланировать \n посещения музея" as uc_mus_plan_1
+    usecase "Прикрепить билеты \n к посещению" as uc_tckt_1
+    usecase "Создать чек-лист \n заметку о посещении" as uc_chcklst_1
+    usecase "Добавить экспонаты \n к чеклисту" as uc_chcklst_2
+    usecase "Изменить статус \n пункта в чеклисте" as uc_chcklst_3
+    usecase "Рассчитать маршрут" as uc_route_1
+
+    usecase "Добавить музей" as uc_add_mus_1
+    usecase "Добавить выставку \n экспонат" as uc_add_exh_1
+    usecase "Добавить новость" as uc_add_news_1
+
+    usecase "Удалить музей" as uc_del_mus_1
+    usecase "Удалить выставку \n экспонат" as uc_del_exh_1
+    usecase "Удалить новость" as uc_del_news_1
+}
+
+rectangle "Система VK" {
+    usecase "API VK" as uc_api_vk
+}
+
+rectangle "Система Google" {
+    usecase "API Google" as uc_api_google
+}
+
+rectangle "Системы Музеев" {
+    usecase "API музеев" as uc_api_mus
+}
+
+uc_auth_1 <-. uc_auth_2: <<расширяет>>
+uc_reg_1 <-. uc_reg_2: <<расширяет>>
+uc_prof_2 .-> uc_prof_2.1: <<включает>>
+uc_prof_1 .-> uc_common_1: <<включает>>
+uc_prof_3 .-> uc_common_1: <<включает>>
+uc_chcklst_1 <-. uc_chcklst_2: <<расширяет>>
+uc_chcklst_1 <-. uc_chcklst_3: <<расширяет>>
+uc_museum_1 <-. uc_mus_det_1: <<расширяет>>
+uc_mus_plan_1 <--. uc_route_1: <<расширяет>>
+uc_mus_plan_1 <-. uc_chcklst_1: <<расширяет>>
+uc_mus_plan_1 <-. uc_tckt_1: <<расширяет>>
+
+uc_museum_1 .--> uc_api_mus: <<использует>>
+uc_mus_det_1 .--> uc_api_mus: <<использует>>
+
+uc_reg_2 .--> uc_api_vk: <<использует>>
+uc_reg_2 .--> uc_api_google: <<использует>>
+uc_auth_2 .--> uc_api_vk: <<использует>>
+uc_auth_2 .--> uc_api_google: <<использует>>
+
+User --> uc_auth_1
+User --> uc_reg_1
+User --> uc_prof_1
+User --> uc_prof_2
+User --> uc_acc_1
+User --> uc_museum_1
+User --> uc_mus_det_1
+User --> uc_mus_plan_1
+User --> uc_tckt_1
+
+Admin --> uc_auth_1
+Admin --> uc_add_mus_1
+Admin --> uc_add_exh_1
+Admin --> uc_add_news_1
+Admin --> uc_del_mus_1
+Admin --> uc_del_exh_1
+Admin --> uc_del_news_1
+
+Partner --> uc_add_mus_1
+Partner --> uc_add_exh_1
+Partner --> uc_del_mus_1
+Partner --> uc_del_exh_1
+
+@enduml

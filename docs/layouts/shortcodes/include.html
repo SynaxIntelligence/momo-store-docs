@@ -1,0 +1,17 @@
+{{ $file := .Get "file" | readFile}}
+{{ $lang := .Get "lang" }}
+{{ $start := .Get "start" }}
+{{ $lines := .Get "lines" }}
+
+{{ $regex := `^Table` }}
+{{ $matches := findRESubmatch $regex $file }}
+
+{{ range $matches }}
+{{ index . 1 }}
+{{ end }}
+
+{{ $file := split $file "\n" }}
+{{ $file := first $lines (after $start $file) }}
+{{ $file := delimit $file "\n" }}
+
+{{ (print "```" $lang "{linenos=table}\n" $file "\n```") | markdownify }}

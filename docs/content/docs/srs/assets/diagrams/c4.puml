@@ -1,0 +1,105 @@
+
+@startuml C4_Elements
+
+' !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include <c4/C4_Container.puml>
+!include <tupadr3/devicons/react>
+!include <tupadr3/devicons/java>
+!include <tupadr3/devicons/postgresql.puml>
+!include <tupadr3/devicons/python.puml>
+!include <tupadr3/devicons/dotnet.puml>
+!include <tupadr3/devicons/docker.puml>
+!include <tupadr3/devicons/msql_server.puml>
+!include <tupadr3/font-awesome/users>
+!include <tupadr3/font-awesome/server>
+!include <tupadr3/font-awesome/envelope>
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+scale 0.7
+
+'skinparam linetype ortho
+'skinparam linetype polyline
+skinparam wrapWidth 200
+
+title Диаграмма микросервисов и внешних взаимодействий мобильного приложения
+
+'LAYOUT_WITH_LEGEND()
+'LAYOUT_LANDSCAPE()
+SHOW_PERSON_PORTRAIT()
+
+AddElementTag("microService", $sprite="java,scale=1", $shadowing="true", $shape=EightSidedShape(), $legendText="micro service (eight sided) (no text, no back color)")
+AddElementTag("backendContainer", $fontColor=$ELEMENT_FONT_COLOR, $bgColor="#335DA5", $shape=EightSidedShape(), $legendText="backend container (eight sided)")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="black")
+AddElementTag("queue", $bgColor="aliceblue", $fontColor="black", $borderColor="darkgrey", $borderThickness="2")
+
+AddRelTag("async", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DashedLine())
+AddRelTag("sync/async", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DottedLine())
+
+
+Person(user, "Пользователь", "Пользователи мобильного приложения", $sprite="users")
+Person(admin, "Администратор")
+
+System_Ext(museum_system, "Museum System", "Система предоставления доступа к информации музея")
+System_Boundary(google_sys, "Google System") {
+    System_Ext(google, "Google REST API")
+}
+System_Boundary(vk_sys, "VK System") {
+    System_Ext(vk, "VK REST API")
+}
+
+System_Boundary(c1, "Musemium App System") {
+
+Container(mobile_app, "Mobile App", "React Native", "Интерфейс взаимодействия с пользователями мобильного приложения", $sprite="react", $link="http://localhost:63342/sal_awh_36/preview/proto.html")
+Container(backend_api, "API Application", "Java, Docker Container", "API интерфейс сервисов (показан агрегированно)", $tags="backendContainer", $sprite="java")
+
+ContainerDb(database, "Database", "Postgre SQL", "Служебная БД для управления конфигурациями и API", $sprite="postgresql")
+
+Container_Boundary(ms, "Microservices") {
+
+        Container(auth_srv, "AuthService", "java", "Сервис аутентификации", $tags="microService")
+        Container(user_srv, "UserService", "java", "Сервис пользователей", $tags="microService")
+        Container(museum_srv, "MuseumService", "C# .NET", "Сервис музеев", $sprite="dotnet", $tags="microService")
+        Container(visit_srv, "VisitService", "java", "Сервис посещений", $tags="microService")
+        Container(route_srv, "RouteService", "python", "Сервис маршрутов", $sprite="python", $tags="microService")
+'        Container(user_photo, "UserPhotoService", "java", "Сервис фото", $tags="microService")
+'        Container(account, "AccountService", "java", "Сервис УЗ", $tags="microService")
+'        Container(checklist, "ChecklistService", "java", "Сервис чеклистов", $tags="microService")
+'        Container(exhibit, "ExhibitService", "java", "Сервис экспонатов", $tags="microService")
+'        Container(ticket, "TicketService", "java", "Сервис билетов", $tags="microService")
+'        Container(location, "LocationService", "java", "Сервис локаций", $tags="microService")
+'        Container(museum_photo, "MuseumPhotoService", "java", "Сервис фото", $tags="microService")
+'        Container(news, "NewsService", "java", "Сервис новостей", $tags="microService")
+
+        ContainerQueue(message_bus, "Message Bus", "RabbitMQ", "Очереди", $tags="queue")
+
+        ContainerDb(user_db, "Database", "Postgre SQL", "БД пользователей", $sprite="postgresql", $tags="storage")
+        ContainerDb(route_db, "Database", "Postgre SQL", "БД маршрутов", $sprite="postgresql", $tags="storage")
+        ContainerDb(visit_db, "Database", "MS SQL", "БД посещений", $sprite="msql_server", $tags="storage")
+        ContainerDb(museum_db, "Database", "Oracle SQL", "БД музеев", $sprite="msql_server", $tags="storage")
+
+        Rel(user_srv, user_db, "Reads from and writes to", "sync, JDBC")
+        Rel(museum_srv, museum_db, "Reads from and writes to", "sync, JDBC")
+        Rel(visit_srv, visit_db, "Reads from and writes to", "sync, JDBC")
+        Rel(route_srv, route_db, "Reads from and writes to", "sync, JDBC")
+
+        Rel(auth_srv, message_bus, "Produce", "AMQP 0-9-1")
+        Rel_Back(user_srv, message_bus, "Consume", "AMQP 0-9-1")
+}
+
+}
+
+
+Rel(user, mobile_app, "Uses", "https", $link="https://plantuml.com/link")
+Rel(admin, mobile_app, "Uses", "https", $link="https://plantuml.com/link")
+
+Rel(mobile_app, backend_api, "Uses", "async, JSON/HTTPS", $tags="async")
+
+Rel(backend_api, museum_system, "Uses", "sync/async, XML/HTTPS", $tags="sync/async")
+Rel(ms, backend_api, "Delivers", "sync/async, XML/HTTPS")
+Rel_Neighbor(auth_srv, vk, "Uses", "sync/async, XML/HTTPS", $tags="sync/async")
+Rel_Neighbor(auth_srv, google, "Uses", "sync/async, XML/HTTPS", $tags="sync/async")
+Rel_Back_Neighbor(database, backend_api, "Reads from and writes to", "sync, JDBC")
+
+@enduml

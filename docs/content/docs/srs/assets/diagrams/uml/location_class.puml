@@ -1,0 +1,16 @@
+
+@startuml
+class Location {
+  - id: int
+  --
+  + name: String
+  + type : enum
+}
+
+class LocationService {
+  + getLocation (id: int): <Location>
+  + addLocation (location: <Location>): void
+  + updateLocation (id: int, newLocation: <Location>): <Location>
+  + removeLocation (id: int): void
+}
+@enduml

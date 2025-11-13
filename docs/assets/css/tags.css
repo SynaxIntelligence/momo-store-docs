@@ -1,0 +1,41 @@
+
+.tag-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-list li {
+    display: inline-block;
+}
+
+.tag-list a {
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 0.9rem;
+    font-weight: lighter;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.tag-list a:hover {
+    background-color: #ffdc28;
+}
+
+.tag-list i {
+    margin-right: 6px;
+    color: #555;
+}
+
+.tag-count {
+    font-size: 0.9em;
+    margin-left: 4px;
+    color: #777;
+}

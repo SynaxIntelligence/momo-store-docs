@@ -1,0 +1,109 @@
+
+@startgantt
+
+<style>
+    ganttDiagram {
+        FontName Verdana
+'        BackgroundColor transparent
+        task {
+            Padding 8
+            Margin 5
+            FontSize 12
+            FontStyle italic
+            LineColor black
+        }
+        milestone {
+            FontSize 14
+            FontStyle bold
+        }
+        timeline {
+            LineColor gray
+        }
+        separator {
+            LineStyle 8.0;3.0
+            LineColor black
+            LineThickness 1.0
+            FontSize 14
+            FontStyle bold
+            FontColor Black
+            Margin 5
+            Padding 20
+        }
+        closed {
+            BackgroundColor white
+
+        }
+    }
+</style>
+
+'!theme toy
+'!theme blueprint
+!theme _none_
+
+title Дорожная карта разработки основного функционала решения \nСегодня %date("dd-MM-YYYY")
+
+
+language ru
+'printscale monthly zoom 5
+projectscale monthly zoom 5
+
+saturday are closed
+sunday are closed
+
+today is colored in #AAF
+
+Project starts the 31st of July 2025
+
+[Начало проекта] as [start] happens at 31st of July 2025 and is 100% completed
+[Оценка требований] as [analytics] on {ЕБ} starts at 31st July 2025 and requires 20 days and is 30% completed
+
+--FR1. Сбор БД--
+[FR1.1 Сбор через EL] as [FR1.1] requires 25 days and starts 14th of August 2025 and is 0% completed
+[FR1.2 Сбор через файлы] as [FR1.2] requires 50 days and starts 14th of August 2025 and is 0% completed
+[FR1.3 Периодичность актуализации] as [FR1.3] requires 15 days and starts 18th of September 2025 and is 0% completed
+[FR1.4 Конвейеры трансформации] as [FR1.4] requires 30 days and starts 22nd of October 2025 and is 0% completed
+[Тестирование] as [FT1] requires 10 days and starts 20th of November 2025 and is 0% completed
+[FR1 Выполнены] as [FR1.end] happens at 3rd of December 2025 and is 0% completed
+
+[start] --> [analytics]
+[analytics] --> [FR1.1]
+[analytics] --> [FR1.2]
+[FR1.1] --> [FR1.4]
+[FR1.2] --> [FR1.4]
+[FR1.1] --> [FR1.4]
+[FR1.2] --> [FR1.4]
+[FR1.4] --> [FT1]
+[FT1] --> [FR1.end]
+
+--FR2. Отчетность--
+[FR2.1 Аналитические отчеты] as [FR2.1] requires 20 days and starts 3rd of December 2025 and is 0% completed
+[Тестирование] as [FT2] requires 10 days and starts 25th of December 2025 and is 0% completed
+[FR2 Выполнены] as [FR2.end] happens at 16th of January 2026 and is 0% completed
+
+[FR1.end] --> [FR2.1]
+[FR2.1] --> [FT2]
+[FT2] --> [FR2.end]
+
+--FR3. Подбор МТР--
+[FR3.1 Реализовать алгоритмы поиска] as [FR3.1] requires 60 days and starts 17th of September 2025 and is 0% completed
+[FR3.2 Реализовать вызов отчета по параметрам] as [FR3.2] requires 40 days and starts 17th of September 2025 and is 0% completed
+[Тестирование] as [FT3] requires 15 days and starts 25th of December 2025 and is 0% completed
+[FR3 Выполнены] as [FR3.end] happens at 23th of January 2026 and is 0% completed
+
+[FR2.end] --> [FR3.1]
+[FR2.end] --> [FR3.2]
+[FR3.1] --> [FT3]
+[FT3] --> [FR3.end]
+
+--FR4. Резервирование МТР--
+[FR4.1 Автоматизация] as [FR4.1] requires 30 days and starts 26th of January 2026 and is 0% completed
+[FR4.2 Сервис резервирования] as [FR4.2] requires 30 days and starts 9th of March 2026 and is 0% completed
+[Тестирование] as [FT4] requires 20 days and starts 20th of April 2025 and is 0% completed
+[FR4 Выполнены] as [FR4.end] happens at 23rd of January 2026 and is 0% completed
+
+[FR3.end] --> [FR4.1]
+[FR3.end] --> [FR4.2]
+[FR4.1] --> [FT4]
+[FT4] --> [FR4.end]
+
+@endgantt

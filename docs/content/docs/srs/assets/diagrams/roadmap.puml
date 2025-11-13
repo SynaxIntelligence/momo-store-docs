@@ -1,0 +1,79 @@
+
+@startgantt
+
+title Дорожная карта разработки основного функционала решения
+
+language ru
+printscale monthly zoom 5
+saturday are closed
+sunday are closed
+
+Project starts the 3rd of June 2024
+
+--Этап Q1 2024--
+[Начало проекта] happens at 1st of June 2024 and is 100% completed
+[Оценка требований] starts at 1st June 2024 and requires 5 days and is 90% completed
+[Разработка документации] requires 12 days and is 90% completed
+[Разработка архитектуры] requires 7 days and is 0% completed
+
+[Начало проекта] --> [Разработка документации]
+[Начало проекта] --> [Оценка требований]
+[Оценка требований] --> [Разработка архитектуры]
+
+--Этап Q2 2024--
+[Разработка интерфейса] as [GUI] links to [[proto.html]]
+[Реализация модуля Регистрация] as [reg] links to [[functional-reqs.html#SR-001-reg]]
+[Реализация модуля Аутентификация] as [auth] links to [[functional-reqs.html#SR-002-auth]]
+[Реализация модуля Dashboard] as [dashboard] links to [[functional-reqs.html#SR-003-dashboard]]
+[Реализация модуля Построение оптимального маршрута] as [route] links to [[functional-reqs.html#SR-011-route]]
+
+[Начало разработки] requires 5 days and is 0% completed
+[GUI] requires 15 days and is 0% completed
+[auth] requires 5 days and is 0% completed
+[reg] requires 5 days and is 0% completed
+[dashboard] requires 15 days and is 0% completed
+[route] requires 10 days and is 0% completed
+
+[Разработка архитектуры] --> [Начало разработки]
+[Начало разработки] --> [GUI]
+[Начало разработки] --> [reg]
+[reg] --> [auth]
+[auth] --> [dashboard]
+[dashboard] --> [route]
+
+--Этап Q3 2024--
+[Реализация модуля Профиль пользователя] as [profile] links to [[functional-reqs.html#SR-004-profile]]
+[Реализация модуля Список музеев] as [museum-lst] links to [[functional-reqs.html#SR-005-museum-lst]]
+[Реализация модуля Подробная информация о музее] as [museum-details] links to [[functional-reqs.html#SR-006-museum-details]]
+[Реализация модуля Планирование посещения] as [plan] links to [[functional-reqs.html#SR-007-plan]]
+[Реализация модуля Прикрепление билетов] as [tickets] links to [[functional-reqs.html#SR-008-tickets]]
+
+[profile] requires 10 days and is 0% completed
+[museum-lst] requires 7 days and is 0% completed
+[museum-details] requires 7 days and is 0% completed
+[plan] requires 8 days and is 0% completed
+[tickets] requires 5 days and is 0% completed
+[Тестирование и отладка] requires 7 days and is 0% completed
+
+[route] --> [profile]
+[profile] --> [museum-lst]
+[museum-lst] --> [museum-details]
+[museum-details] --> [plan]
+[plan] --> [tickets]
+[tickets] --> [Тестирование и отладка]
+
+--Этап Q4 2024--
+[Реализация модуля Создание чеклиста] as [checklist] links to [[functional-reqs.html#SR-009-checklist]]
+[Реализация модуля Просмотр новостей] as [news] links to [[functional-reqs.html#SR-010-news]]
+
+[checklist] requires 7 days and is 0% completed
+[news] requires 5 days and is 0% completed
+[Оптимизация производительности] requires 15 days and is 0% completed
+[Выпуск финальной версии] happens at [Оптимизация производительности]'s end and is 0% completed
+
+[Тестирование и отладка] --> [checklist]
+[checklist] --> [news]
+[news] --> [Оптимизация производительности]
+[Оптимизация производительности] --> [Выпуск финальной версии]
+
+@endgantt

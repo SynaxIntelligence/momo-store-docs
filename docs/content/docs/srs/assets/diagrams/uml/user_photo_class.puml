@@ -1,0 +1,18 @@
+
+@startuml
+class UserPhoto {
+  - id: int
+  --
+  + userId: int
+  + data: byte[]
+  + isActive: bool
+}
+
+class UserPhotoService {
+  + getPhoto (id: int): byte[]
+  + addPhoto (userId: int, data: byte[]): void
+  + updatePhoto (id: int, data: byte[]): void
+  + removePhoto (id: int): void
+  + getUserPhotoList (userId: int): List<UserPhoto>
+}
+@enduml
