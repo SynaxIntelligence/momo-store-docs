@@ -36,7 +36,7 @@ sidebar:
 
 ### Схема (Yandex Cloud topology)
 
-{{< zoomimg src="/docs/infrastructure/assets/topology.png" alt="topology" >}}
+{{< zoomimg src="/momo-store-docs/docs/infrastructure/assets/topology.png" alt="topology" >}}
 
 >[!NOTE]
 > Каждая виртуальная машина привязана к своей подсети, что обеспечивает

@@ -1,5 +1,5 @@
 # Configuration
-baseURL: 'https://synaxintelligence.github.io/momo-store-docs/'
+baseURL: 'https://synaxintelligence.github.io/'
 relativeURLs: false
 canonifyURLs: false
 languageCode: ru
