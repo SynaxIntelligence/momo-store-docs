@@ -21,7 +21,7 @@ git config --local user.email "Work Email"
 [Git Flow](https://www.gitkraken.com/learn/git/git-flow)
 [Git Flow Setup](https://skoch.github.io/Git-Workflow/)
 
-{{< zoomimg src="/instructions/assets/git-flow.svg" alt="Git flow" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/git-flow.svg" alt="Git flow" >}}
 
 **Язык коммитов**: Английский
 

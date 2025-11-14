@@ -58,24 +58,24 @@ sidebar:
 
 ### Tf State in S3
 
-{{< zoomimg src="/instructions/assets/tfstate.png" alt="tfstate" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/tfstate.png" alt="tfstate" >}}
 
 ### Helm чарты Nexus
 
-{{< zoomimg src="/instructions/assets/nexus.png" alt="nexus" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/nexus.png" alt="nexus" >}}
 
 ### Argo CD
 
-{{< zoomimg src="/instructions/assets/argocd.png" alt="argocd" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/argocd.png" alt="argocd" >}}
 
 ### Дашборды
 
-{{< zoomimg src="/instructions/assets/dashboards.png" alt="dashboards" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/dashboards.png" alt="dashboards" >}}
 
 ### Дашборд Grafana
 
-{{< zoomimg src="/instructions/assets/grafana.png" alt="grafana" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/grafana.png" alt="grafana" >}}
 
 ### Loki Logs
 
-{{< zoomimg src="/instructions/assets/logs.png" alt="logs" >}}
+{{< zoomimg src="/momo-store-docs/instructions/assets/logs.png" alt="logs" >}}
