@@ -27,13 +27,13 @@ languages:
   ru:
     languageName: Русский
     weight: 1
-    title: Портал документации
+    title: Momo Store Docs
     params:
       reading_speed: 179
   en:
     languageName: English
     weight: 1
-    title: Documentation Portal
+    title: Momo Store Docs
 #
 module:
   imports:

@@ -10,11 +10,11 @@ comments: true
 
 **`Архитектурные практики`** - микросервисный подход, разделение frontend/backend, GitOps-модель доставки, декларативные окружения через Helm и Argo CD.
 
-**`DevOps и инфраструктура`** - Kubernetes (k8s) в Yandex Cloud, Docker, Terraform (создание сети и ВМ), Ansible (bootstrap кластера через kubeadm), Helm-чарты, GitLab CI/CD, Argo CD для GitOps-синхронизации.
+**`DevOps и инфраструктура`** - self-deployed k8s в Yandex Cloud, Docker, Terraform (создание сети и ВМ), Ansible (bootstrap кластера через kubeadm), Helm-чарты, GitLab CI/CD, Argo CD для GitOps-синхронизации.
 
 **`Безопасность и IAM`** - использование imagePullSecrets, TLS-сертификаты от cert-manager, безопасная публикация образов в GitLab Container Registry, SSH-доступ с ключами, защита CI-переменных.
 
-**`Данные и интеграция`** - backend взаимодействует с внутренними сервисами и внешними API, конфигурации управляются через ConfigMap/Secrets, коммуникация внутри кластера через Service DNS.
+**`Данные и интеграция`** - backend взаимодействует с внутренними сервисами, конфигурации управляются через ConfigMap, коммуникация внутри кластера через Service DNS.
 
 **`Языки и фреймворки`**
 - **Backend:** `Go` (REST API, компактный бинарный файл в Docker-образе).

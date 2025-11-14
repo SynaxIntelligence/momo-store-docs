@@ -11,12 +11,12 @@ prev: /docs
 
 {{< cards >}}
 {{< card link="https://app.k8s.synax.ru/" title="Momo Store" subtitle="Пельмени" icon="menu" tag="app" >}}
-{{< card link="/instructions" title="Чеклист" icon="menu" tag="report" >}}
+{{< card link="/instructions/report" title="Чеклист" icon="menu" tag="report" >}}
 {{< /cards >}}
 
 > [!WARNING]
-> `Ctrl + F5` в браузере, если не загружается каталог\
-> Требует подтвердить серты
+> `Ctrl + F5` в браузере, если не загружается главная страница \
+> __требует подтвердить серты__
 
 ## Ресурсы
 
@@ -39,22 +39,22 @@ prev: /docs
 ### GitOps
 
 {{< cards >}}
-{{< card link="http://prom.k8s.synax.ru:32011/" title="Argo CD" icon="argocd" tag="gitops" >}}
+{{< card link="http://argocd.k8s.synax.ru:30580/" title="Argo CD" icon="argocd" tag="gitops" >}}
 {{< card link="https://nexus.praktikum-services.tech/#browse/browse:sausage-store-helm-std-041-32" title="Nexus" icon="nexus" subtitle="Хранение Helm-пакетов" tag="gitops" >}}
 {{< /cards >}}
 
 ## Здесь вы найдёте
 
 ### Инфраструктуру
-- топологию Kubernetes-кластера в Yandex Cloud
+- топологию k8s-кластера в Yandex Cloud
 - Terraform + Ansible как IaC
-- сетевую архитектуру, принципы развёртывания и диагностику
+- сетевую архитектуру, принципы развёртывания
 
 ### Архитектуру приложения
 - структурную модель backend и frontend
 - схемы взаимодействия компонентов
 - GitOps-подход с использованием Argo CD
-- Helm-чарты и структуру окружений
+- Helm-чарты и окружения
 
 ### Репозиторий и CI/CD
 - структуру исходного кода
@@ -71,7 +71,7 @@ prev: /docs
 - как публиковать изменения
 - как проводить ревью и тестирование
 
-Портал построен на `Hugo` — статическом генераторе сайтов, что позволяет легко расширять его и поддерживать в актуальном виде.
+Портал построен на статическом генераторе сайтов `Hugo`, что позволяет легко расширять его и поддерживать в актуальном виде.
 
 ## Структура портала
 

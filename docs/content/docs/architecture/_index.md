@@ -7,164 +7,172 @@ sidebar:
   open: false
 ---
 
-# Архитектура приложения
+## Общий обзор
 
-## 1. Общий обзор
-
-Приложение **momo-store** развёрнуто в Kubernetes-кластере и управляется системой GitOps через **Argo CD**.  
+Приложение **momo-store** развёрнуто в Kubernetes-кластере и управляется системой `GitOps` через **Argo CD**.  
 Архитектура включает два независимых микросервиса:
 
-- **backend** — API-сервис на Go
-- **frontend** — SPA-приложение, обслуживаемое через Nginx
+- **backend** — API-сервис на `Go`
+- **frontend** — `Vue.js` приложение, обслуживаемое через `Nginx`
 
 Каждый компонент разворачивается как отдельный под-чарт Helm и имеет собственный Deployment, Service, ConfigMap и связанные объекты Kubernetes.
-
 Argo CD визуализирует состояние всех ресурсов и отслеживает их синхронизацию с Git-репозиторием конфигурации.
 
----
-
-## 2. Логическая архитектура компонентов
+## Логическая архитектура компонентов
 
 Архитектура состоит из следующих основных уровней:
 
-### ● **Корневой Helm-чарт (momo-store)**
+### Структура Helm-чартов
+
+{{< filetree/container >}}
+{{< filetree/folder name="charts" state="open" >}}
+
+    {{< filetree/folder name="backend" state="closed" >}}
+      {{< filetree/folder name="templates" state="open" >}}
+        {{< filetree/file name="_helpers.tpl" >}}
+        {{< filetree/file name="configmap.yaml" >}}
+        {{< filetree/file name="deployment.yaml" >}}
+        {{< filetree/file name="NOTES.txt" >}}
+        {{< filetree/file name="secrets.yaml" >}}
+        {{< filetree/file name="service.yaml" >}}
+        {{< filetree/file name="vpa.yaml" >}}
+      {{< /filetree/folder >}}
+      {{< filetree/file name=".helmignore" >}}
+      {{< filetree/file name="Chart.yaml" >}}
+      {{< filetree/file name="values.yaml" >}}
+    {{< /filetree/folder >}}
+
+    {{< filetree/folder name="frontend" state="closed" >}}
+      {{< filetree/folder name="nginx" state="closed" >}}{{< /filetree/folder >}}
+      {{< filetree/folder name="templates" state="open" >}}
+        {{< filetree/file name="_helpers.tpl" >}}
+        {{< filetree/file name="configmap.yaml" >}}
+        {{< filetree/file name="deployment.yaml" >}}
+        {{< filetree/file name="ingress.yaml" >}}
+        {{< filetree/file name="NOTES.txt" >}}
+        {{< filetree/file name="service.yaml" >}}
+      {{< /filetree/folder >}}
+      {{< filetree/file name=".helmignore" >}}
+      {{< filetree/file name="Chart.yaml" >}}
+      {{< filetree/file name="values.yaml" >}}
+    {{< /filetree/folder >}}
+
+    {{< filetree/file name=".helmignore" >}}
+    {{< filetree/file name="Chart.yaml" >}}
+    {{< filetree/file name="values.yaml" >}}
+    {{< filetree/file name="values-prod.yaml" >}}
+
+{{< /filetree/folder >}}
+{{< /filetree/container >}}
+
+### **Корневой Helm-чарт (momo-store)**
+
 Управляет всей структурой приложения и описывает его зависимые компоненты.
+Корневой чарт также предоставляет базовые значения для окружений (`values-dev.yaml`, `values-prod.yaml`), которые обновляются CI/CD.
 
-**Ресурсы корневого уровня:**
-- `configmap momo-store-backend`
-- `configmap momo-store-frontend`
-- `docker-config secret` (секрет для контейнерного registry)
-- два сервисных ресурса:
-    - `momo-store-backend`
-    - `momo-store-frontend`
+Корневой чарт в каталоге `charts/` описывает приложение целиком и может содержать зависимости на дочерние чарты `backend` и `frontend`.
 
-Корневой чарт также генерирует окруженческие значения (`values-dev.yaml`, `values-prod.yaml`), которые обновляются CI/CD.
+- `Chart.yaml`
+  - метаданные приложения (имя, версия чарта, `appVersion`);
+  - список зависимостей на под-чарты (backend и frontend).
 
----
+- `values.yaml`
+  - базовые настройки по умолчанию для всех компонентов;
+  - секции вида:
+    - `backend: …`
+    - `frontend: …`
+  - общие параметры (namespace, глобальные аннотации/labels и т.п.).
 
-## 3. Backend слой
+- `values-prod.yaml`
+  - переопределения для прод-окружения:
+    - количество реплик;
+    - ресурсы (requests/limits);
+    - домены и аннотации ingress;
+    - включение/отключение отдельных возможностей.
 
-### ● Deployment: `momo-store-backend`
-Backend представлен как отдельный Deployment, содержащий одну реплику (по скриншоту), но допускающий автоматическую горизонтальную или вертикальную масштабируемость.
+**Связь с CI/CD**
 
-**Backend включает:**
+- GitLab-job `deploy` из шаблона `.deploy_template` работает по GitOps-подходу:  
+  он копирует базовый `values.yaml` в `values-${CI_ENVIRONMENT_NAME}.yaml` в отдельном конфиг-репозитории, обновляет:
+  - `.${DEPENDENCY_CHART_NAME}.image.tag = "${VERSION}"`
+  - `.appVersion = "${VERSION}"` в `Chart.yaml`,
+    после чего коммитит изменения.
+- Применением этих изменений в кластер занимается внешний CD-инструмент (например, Argo CD).
 
-#### 3.1. ConfigMap `momo-store-backend`
-Хранит конфигурационные параметры сервиса:
-- адреса внешних зависимостей
-- параметры подключения
-- переменные окружения
+### Helm-чарт backend
 
-#### 3.2. Secret `docker-config`
-Используется как imagePullSecret для скачивания Docker-образа.
+Каталог: `charts/backend`.
 
-#### 3.3. Service `momo-store-backend`
-- тип: `ClusterIP`
-- публикует backend внутри кластера
-- используется frontend-приложением
+**Основные шаблоны:**
 
-#### 3.4. ReplicaSets
-Argo CD отображает множество ReplicaSet с историей ревизий:
+- `templates/deployment.yaml`
+  - описание `Deployment` для backend-сервиса;
+  - образ задаётся через `.Values.image.repository` и `.Values.image.tag`, которые обновляются из CI/CD;
+  - конфигурация probe (readiness/liveness), ресурсы, переменные окружения.
 
-- `momo-store-backend-7cdc89…`
-- `momo-store-backend-5bd857…`
-- `momo-store-backend-5b6d7f…`
+- `templates/service.yaml`
+  - сервис типа `ClusterIP` (как правило);
+  - экспорт портов backend-приложения внутри кластера.
 
-Каждый ReplicaSet представляет собой конкретную версию backend-образа.
+- `templates/configmap.yaml`
+  - конфигурация приложения (строки подключения, флаги фич, URL-ы внешних сервисов и т.п.), прокидываемая в поды через env или volume.
 
-#### 3.5. Pod
-Каждый ReplicaSet создаёт Pod с контейнером backend:
-- состояние: `running`
-- готовность: `1/1`
-- в логах Argo CD отображается возраст Pod и версия образа
+- `templates/secrets.yaml`
+  - описание `Secret` для чувствительных данных;
+  - содержимое может приходить из внешних хранилищ (Vault, K8s-secrets), а чарт отвечает за монтирование.
 
-Backend обновляется **через GitOps** — изменения в values-файлах приводят к созданию нового ReplicaSet и замене Pod.
+- `templates/vpa.yaml`
+  - объект `VerticalPodAutoscaler` (если включён), регулирующий ресурсы контейнеров.
 
----
+- `_helpers.tpl`
+  - шаблоны имён ресурсов (`fullname`, `name`, labels и т.п.), используемые во всех манифестах.
 
-## 4. Frontend слой
+- `values.yaml`
+  - значения по умолчанию: имя образа, тег, ресурсы, параметры сервиса, env-переменные.
 
-### ● Deployment: `momo-store-frontend`
-Frontend — SPA-сайт, обслуживаемый Nginx.
+### Helm-чарт frontend
 
-**Frontend включает:**
+Каталог: `charts/frontend`.
 
-#### 4.1. ConfigMap `momo-store-frontend`
-Используется для:
-- хранения Nginx-конфигурации
-- подключения переменных окружения, используемых SPA
+**Основные шаблоны:**
 
-#### 4.2. Service `momo-store-frontend`
-- тип: `ClusterIP`
-- frontend доступен в кластере по этому сервису
-- используется ingress-контроллером
+- `templates/deployment.yaml`
+  - Deployment для SPA / frontend-сервиса (часто Nginx + статические файлы);
+  - образ определяется через `.Values.image.*`, тег обновляется CI/CD.
 
-#### 4.3. Ingress `momo-store-frontend`
-Ingress определяет:
-- внешний URL приложения
-- аннотации под nginx-controller
-- TLS-конфигурацию
+- `templates/service.yaml`
+  - сервис для frontend (обычно `ClusterIP`), к которому привязан ingress.
 
-Argo CD отображает также сертификат `app-k8s-snx-tls`, автоматически управляемый cert-manager.
+- `templates/ingress.yaml`
+  - объект `Ingress`, публикующий frontend наружу;
+  - домены и пути задаются в `.Values.ingress.hosts`, `.Values.ingress.tls`;
+  - здесь же могут быть аннотации под ingress-контроллер (nginx, cert-manager, и т.п.).
 
-#### 4.4. ReplicaSets frontend
-История деплоев:
+- `templates/configmap.yaml`
+  - конфигурация frontend (например, переменные окружения, URL API), монтируемая в контейнер.
 
-- `momo-store-frontend-dc8b77f…`
-- `momo-store-frontend-5fb547…`
-- `momo-store-frontend-8d8d4c…`
-- `momo-store-frontend-7cf86c…`
+- каталог `nginx/`
+  - конфигурация Nginx, используемая образом frontend-сервиса (custom nginx.conf, location-правила и т.д.).
 
-Каждый ReplicaSet соответствует очередному образу frontend.
+- `_helpers.tpl` и `values.yaml`
+  - аналогично backend-чарту, содержат хелперы и значения по умолчанию.
 
----
+### Среда и окружения
 
-## 5. Поток данных и взаимодействие компонентов
+- **dev**
+  - базируется на `values.yaml` с дополнительными dev-переключателями
+  - CI/CD формирует `values-dev.yaml` в конфиг-репозитории и прописывает туда нужный `image.tag`
 
-### 5.1. Взаимодействие frontend → backend
-- Frontend вызывает backend по внутреннему DNS-имени сервиса:
+- **prod**
+  - использует `values-prod.yaml` как основу
+  - деплой в prod-окружение инициируется вручную (`when: manual`) для ветки `main`
 
-```text
-http://momo-store-backend:PORT
-```
-### 5.2. Внешний доступ
+### Роль Helm-чартов в общем потоке
 
-Все внешние запросы идут через:
-
-* Ingress Controller
-* TLS-сертификат (`app-k8s-snx-tls`)
-* Nginx в frontend-поде
-* далее SPA обращается к backend по сервису
-
-### 5.3. Обновление приложения
-
-1. CI обновляет chart в Git (image.tag + appVersion).
-2. Argo CD детектирует drift.
-3. Argo CD применяет новую версию Helm-чарта.
-4. Kubernetes создаёт новый ReplicaSet.
-5. Поды заменяются по rolling update.
-
-## 6. GitOps-архитектура
-
-### Основные свойства:
-
-* Helm-чарты не деплоятся напрямую из CI/CD.
-* Вместо этого CI обновляет конфигурационный репозиторий.
-* Argo CD синхронизирует состояние с кластером.
-* Репликация и rollback управляются через ReplicaSet историю.
-
-Это делает архитектуру предсказуемой, декларативной и безопасной.
-
----
-
-## 7. Преимущества архитектуры
-
-* **Микросервисность** — backend и frontend изолированы, обновляются независимо.
-* **Надёжность** — autosync Argo CD гарантирует консистентное состояние.
-* **История версий** — полная история ReplicaSet развёртываний.
-* **GitOps** — кластер всегда соответствует Git.
-* **Безопасность** — TLS сертификаты и imagePullSecrets.
-* **Гибкость** — можно разворачивать dev/prod через разные values-файлы.
-
-
-
+1. Разработчик изменяет код backend или frontend
+2. CI/CD:
+  - собирает Docker-образы
+  - рассчитывает `VERSION`
+  - обновляет значения образов и `appVersion` в Helm-чартах в конфиг-репозитории
+3. Внешний CD-контур (Argo CD) применяет изменения к кластеру
+4. Kubernetes пересоздаёт поды backend и frontend на новых версиях образов
