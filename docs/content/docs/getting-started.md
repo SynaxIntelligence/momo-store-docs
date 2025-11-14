@@ -11,7 +11,7 @@ prev: /docs
 
 {{< cards >}}
 {{< card link="https://app.k8s.synax.ru/" title="Momo Store" subtitle="Пельмени" icon="menu" tag="app" >}}
-{{< card link="/instructions/report" title="Чеклист" icon="menu" tag="report" >}}
+{{< card link="/momo-store-docs/instructions/report" title="Чеклист" icon="menu" tag="report" >}}
 {{< /cards >}}
 
 > [!WARNING]
